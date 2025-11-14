@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,6 +21,8 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     [SerializeField] private Image switchPlayerPrompt;
     [SerializeField] private TMP_Text nextPlayerName;
     [SerializeField] private CanvasGroup canvasGroup;
+    
+    [SerializeField] private float revealTimer;
     
     private void Awake()
     {
@@ -65,7 +66,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     new void Start()
     {
         GameContext = new GameContext(GameManager.Instance, GameManager.Instance.Players, switchPlayerPrompt,
-            nextPlayerName, null, canvasGroup);
+            nextPlayerName, null, canvasGroup, revealTimer);
         
         InitialiseStates();
         

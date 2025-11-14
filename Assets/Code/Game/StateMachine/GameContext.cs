@@ -6,7 +6,7 @@ using TMPro;
 public class GameContext
 {
     public GameContext(GameManager manager, List<Player> players, Image switchPlayerPrompt,
-        TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup)
+        TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup, float revealTimer)
     {
         Manager = manager;
         Players = players;
@@ -14,6 +14,7 @@ public class GameContext
         NextPlayerName = switchPlayerPromptText;
         PlayerRequestDataBuffer = playerRequestData;
         CanvasGroup = canvasGroup;
+        RevealTimer = revealTimer;
     }
     
     public GameManager Manager;
@@ -26,4 +27,6 @@ public class GameContext
     public int NextPlayerIndex;
     public int CurrentPlayerIndex = -1;
     public int LastPlayerIndex = -1;
+
+    public float RevealTimer;
 }

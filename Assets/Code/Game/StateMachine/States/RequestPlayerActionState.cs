@@ -5,9 +5,15 @@ using UnityEngine;
 public class RequestPlayerActionState : GameState
 {
     private bool _processed;
+    private bool _processedCallOut;
     private bool _calledOutPositive;
     private bool _calledOut;
     private Card[] _lastPlayedCards;
+    private bool _animating;
+
+    private float _timer;
+    
+    
     public RequestPlayerActionState(GameStateManager.GameState key, GameContext gameContext) : base(key, gameContext)
     {
         GameContext = gameContext;
@@ -16,6 +22,8 @@ public class RequestPlayerActionState : GameState
     public override void EnterState()
     {
         _processed = false;
+        _processedCallOut = false;
+        _timer = GameContext.RevealTimer;
     }
 
     public override void UpdateState()
@@ -36,21 +44,38 @@ public class RequestPlayerActionState : GameState
                 
                 GameContext.Manager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
                 GameContext.Manager.JustCalledOut = false;
+                
+                _processed = true;
                 break;
             case PlayerActionType.CallOut:
-                ProcessCallOut();
+                    ProcessCallOut();
+                AnimateCards();
                 break;
             case PlayerActionType.PickUp:
                 Card poppedCard = GameContext.Manager.PopCard();
                 poppedCard.gameObject.SetActive(true);
                 GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex].AddCardToHand(poppedCard);
                 poppedCard.AssignCardToPlayer(GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex]);
+                _processed = true;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
         
-        _processed = true;
+        Debug.Log("Processed: " + _processed);
+        Debug.Log("Processed Call Out: " + _processedCallOut);
+        Debug.Log("Animating: " + _animating);
+        Debug.Log("Timer: " + _timer);
+        
+        if(_animating)
+        {
+            _timer -= Time.deltaTime;
+            
+            if(_timer <= 0)
+            {
+                _processed = true;
+            }
+        }
     }
 
     public override void ExitState()
@@ -73,6 +98,7 @@ public class RequestPlayerActionState : GameState
         _lastPlayedCards = null;
         _calledOut = false;
         _calledOutPositive = false;
+        _animating = false;
     }
     
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
@@ -80,8 +106,37 @@ public class RequestPlayerActionState : GameState
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.RequestPlayerAction;
     }
 
+    private void AnimateCards()
+    {
+        GameContext.Manager.MaxCardRevealed = _lastPlayedCards.Length;
+        
+        _animating = false;
+        
+        CheckAnimating();
+        
+        for (int i = 0; i < _lastPlayedCards.Length; i++)
+        {
+            _lastPlayedCards[i].RevealCard = true;
+            _lastPlayedCards[i].RevealIndex = i;
+        }
+    }
+
+    private void CheckAnimating()
+    {
+        foreach (var card in _lastPlayedCards)
+        {
+            if (!card.RevealCompleted)
+            {
+                _animating = true;
+                break;
+            }
+        }
+    }
+    
     private void ProcessCallOut()
     {
+        if(_processedCallOut) return;
+        
         _calledOut = true;
         _calledOutPositive = false;
         _lastPlayedCards = GameContext.Manager.PopLastPlayedCards();
@@ -95,5 +150,7 @@ public class RequestPlayerActionState : GameState
                 break;
             }
         }
+        
+        _processedCallOut = true;
     }
 }

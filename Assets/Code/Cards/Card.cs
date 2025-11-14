@@ -17,6 +17,16 @@ public class Card : MonoBehaviour
     public bool Selectable;
     public bool ForceShow;
     public bool Played;
+    public bool RevealCard;
+    public int RevealIndex = -1;
+    public bool RevealCompleted;
+
+    private bool _revealTransformCalculated;
+    
+    private float _angle;
+    private float _adder;
+    private Vector3 _pos;
+    private bool _rotating;
 
     [SerializeField] private Material greyscaleMaterial;
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -29,6 +39,9 @@ public class Card : MonoBehaviour
 
     private Camera mainCamera => Camera.main;
 
+    private const float REVEAL_Y_POSITION = 6.3f;
+    private const float REVEAL_ANGLE = 180f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -38,6 +51,8 @@ public class Card : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Reveal();
+        
         if((GameManager.Instance.CurrentPlayer != BelongsTo || 
            GameManager.Instance.currentState != GameStateManager.GameState.RequestPlayerAction) && !Played)
         {
@@ -69,6 +84,59 @@ public class Card : MonoBehaviour
         }
     }
 
+    private void Reveal()
+    {
+        if (!RevealCard) return;
+
+        Transform rendererTransform = _spriteRenderer.transform;
+        ForceShow = true;
+        
+        if (!_revealTransformCalculated)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            
+            _angle = GameManager.Instance.CurrentPlayerIndex * (360f / GameManager.Instance.AmountOfPlayers);
+            
+            print(_angle);
+            
+            _pos = GameManager.Instance.GetDisplayPosition(RevealIndex);
+            _revealTransformCalculated = true;
+        }
+        
+
+        rendererTransform.position = Vector3.Lerp(
+            rendererTransform.position,
+            new Vector3(_pos.x, _pos.y + REVEAL_Y_POSITION, _pos.z), 
+            Time.deltaTime * cardResponsiveness);
+        
+        rendererTransform.localRotation = Quaternion.Lerp(
+            rendererTransform.localRotation,
+            Quaternion.Euler(_angle, 90, 90),
+            Time.deltaTime * cardResponsiveness);
+        
+        RevealCompleted = rendererTransform.localEulerAngles.x >= _angle - 1f && 
+                                   rendererTransform.position.y >= _pos.y + REVEAL_Y_POSITION - 0.1f;
+    }
+
+    // private void RevealRotation()
+    // {
+    //     _rotating = true;
+    //     Transform rendererTransform = _spriteRenderer.transform;
+    //     _adder = Mathf.Lerp(_adder, REVEAL_ANGLE, Time.deltaTime * cardResponsiveness);
+    //
+    //     rendererTransform.localEulerAngles = new Vector3(_angle + _adder,
+    //         rendererTransform.localEulerAngles.y, rendererTransform.localEulerAngles.z);
+    //
+    //     if (_adder >= REVEAL_ANGLE / 2f)
+    //     {
+    //         ForceShow = true;
+    //     }
+    //     if (_adder >= REVEAL_ANGLE - 1f)
+    //     {
+    //         RevealCompleted = true;
+    //     }
+    // }
+    
     private void UpdateRenderer()
     {
         //Checks if the player has a player which it belongs to
@@ -79,7 +147,7 @@ public class Card : MonoBehaviour
                 : GameManager.Instance.GetSpriteImage(suit, rank, true);
         }
         
-        if(Played) return;
+        if(Played || RevealCard) return;
         
         _spriteRenderer.transform.localScale = Vector3.Lerp(_spriteRenderer.transform.localScale,
             Vector3.one, Time.deltaTime * cardResponsiveness);
@@ -97,6 +165,13 @@ public class Card : MonoBehaviour
         BelongsTo = assignTo;
         UpdateSprite(BelongsTo);
         _selected = false;
+        RevealCard = false;
+        RevealIndex = -1;
+        _rotating = false;
+        _revealTransformCalculated = false;
+        Transform rendererTransform = _spriteRenderer.transform;
+        rendererTransform.localPosition = Vector3.zero;
+        rendererTransform.localRotation = Quaternion.Euler(0, 0, 0);
     }
     
     public void Deselect()

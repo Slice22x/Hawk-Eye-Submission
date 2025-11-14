@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Card> cardStack;
     public List<Card> PlayedStack;
     public int AmountOfCardsPlayedLast;
+    public int MaxCardRevealed;
     public GameStateManager.GameState currentState;
     public CardInfo.CardRank[] CardQueue;
     public bool CanCallOut;
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     public List<Player> Players;
     private int _currentPlayerIndex;
     public Player CurrentPlayer => Players[_currentPlayerIndex];
+    public int CurrentPlayerIndex => _currentPlayerIndex;
 
     [Header("World")] [SerializeField] private Transform mat;
     [SerializeField] private float radiusFromMat;
@@ -120,6 +122,8 @@ public class GameManager : MonoBehaviour
             card.transform.localEulerAngles = new Vector3(0, 0, card.BelongsTo.transform.localEulerAngles.y + Random.Range(-15f,15f));
             
             card.transform.localScale = Vector3.one * PLACED_CARD_SCALE;
+
+            card.Played = true;
             
             card.AssignCardToPlayer(null);
             PlayedStack.Add(card);
@@ -297,11 +301,41 @@ public class GameManager : MonoBehaviour
         };
     }
     
+    public Vector3 GetDisplayPosition(int index)
+    {
+        if (MaxCardRevealed == -1) return Vector3.zero;
+        
+        var displayDirection = Players[_currentPlayerIndex].transform.right;
+
+        var max = mat.position + displayDirection * mat.localScale.x / 2f;
+        var min = mat.position - displayDirection * mat.localScale.x / 2f;
+        
+        var position = Vector3.zero;
+        
+        if(MaxCardRevealed > 1)
+            position = Vector3.Lerp(min, max, (float)index / MaxCardRevealed);
+        else if (MaxCardRevealed == 1)
+        {
+            position = mat.position;
+        }
+        
+        return position;
+    }
+    
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
         
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(mat.position, radiusFromMat);
+
+        if (!Application.isPlaying) return;
+        
+        Gizmos.color = Color.black;
+
+        Vector3 displayDirection = Players[_currentPlayerIndex].transform.right;
+        
+        Gizmos.DrawSphere(mat.position + displayDirection * mat.localScale.x / 2f, 0.1f);
+        Gizmos.DrawSphere(mat.position - displayDirection * mat.localScale.x / 2f, 0.1f);
     }
 }
