@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c14bfc8d8749141a7f05feedf7a4db, type: 3}
+  m_Name: Main Card Info Diamond
+  m_EditorClassIdentifier: Assembly-CSharp::CardInfo
+  cardSuits: 1
+  cardImages:
+  - cardRank: 0
+    sprite: {fileID: -2119978494, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 1
+    sprite: {fileID: 181009442, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 2
+    sprite: {fileID: 1985634782, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 3
+    sprite: {fileID: -341667660, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 4
+    sprite: {fileID: -397339373, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 5
+    sprite: {fileID: -929975921, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 6
+    sprite: {fileID: 1302306567, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 7
+    sprite: {fileID: 1964680930, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 8
+    sprite: {fileID: -1198184513, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 9
+    sprite: {fileID: -1421859971, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 10
+    sprite: {fileID: 313337365, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 11
+    sprite: {fileID: 1208232111, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  - cardRank: 12
+    sprite: {fileID: -2142419318, guid: c05cba0c04760744ca3712b0e6d5064e, type: 3}
+  cardBack: {fileID: 21300000, guid: ee9a85855cb0e3840a64f9fd86c13732, type: 3}
