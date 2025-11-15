@@ -39,8 +39,8 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
        States.Add(GameState.PlaceCard, new PlaceCardState(GameState.PlaceCard, GameContext));
        States.Add(GameState.CallOut, new CallOutState(GameState.CallOut, GameContext));
        States.Add(GameState.PickUp, new PickUpState(GameState.PickUp, GameContext));
-       // States.Add(GameState.Joker, new GameState(GameState.Joker, GameContext));
-       // States.Add(GameState.Winner, new GameState(GameState.Winner, GameContext));
+       States.Add(GameState.Joker, new JokerState(GameState.Joker, GameContext));
+       // States.Add(GameState.Winner, new WinnerState(GameState.Winner, GameContext));
        
        CurrentState = States[GameState.Initialising];
     }
@@ -68,7 +68,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     new void Start()
     {
-        GameContext = new GameContext(GameManager.Instance, GameManager.Instance.Players, switchPlayerPrompt,
+        GameContext = new GameContext(GameManager.Instance, GameManager.Instance.PlayerManager.Players, switchPlayerPrompt,
             nextPlayerName, null, canvasGroup, revealTimer);
         
         InitialiseStates();

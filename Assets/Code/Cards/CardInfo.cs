@@ -15,7 +15,8 @@ public class CardInfo : ScriptableObject
         Hearts,
         Diamonds,
         Spades,
-        Clubs
+        Clubs,
+        Jokers
     }
 
     public enum CardRank
@@ -32,7 +33,12 @@ public class CardInfo : ScriptableObject
         Ten,
         Jack,
         Queen,
-        King
+        King,
+        Bail,
+        Clown,
+        Spy,
+        Jester,
+        None
     }
 
     [SerializeField] private CardSuit cardSuits;

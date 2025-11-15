@@ -20,6 +20,7 @@ public class Card : MonoBehaviour
     public bool RevealCard;
     public int RevealIndex = -1;
     public bool RevealCompleted;
+    public float RevealTimeout;
 
     private bool _revealTransformCalculated;
     
@@ -27,6 +28,7 @@ public class Card : MonoBehaviour
     private float _adder;
     private Vector3 _pos;
     private bool _rotating;
+    private float _revealTimer;
 
     [SerializeField] private Material greyscaleMaterial;
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -34,18 +36,22 @@ public class Card : MonoBehaviour
     public SpriteRenderer SpriteRenderer => _spriteRenderer;
 
     private bool _selected;
+    private Sprite _front;
+    private Sprite _back;
     
     public Player BelongsTo { get; set; }
 
     private Camera mainCamera => Camera.main;
 
     private const float REVEAL_Y_POSITION = 6.3f;
-    private const float REVEAL_ANGLE = 180f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _spriteRenderer.material = new Material(greyscaleMaterial);
+        _revealTimer = RevealTimeout;
+        _front = GameManager.Instance.CardManager.GetSpriteImage(suit, rank, false);
+        _back = GameManager.Instance.CardManager.GetSpriteImage(suit, rank, true);
     }
 
     // Update is called once per frame
@@ -53,7 +59,7 @@ public class Card : MonoBehaviour
     {
         Reveal();
         
-        if((GameManager.Instance.CurrentPlayer != BelongsTo || 
+        if((GameManager.Instance.PlayerManager.CurrentPlayer != BelongsTo || 
            GameManager.Instance.currentState != GameStateManager.GameState.RequestPlayerAction) && !Played)
         {
             return;
@@ -86,6 +92,8 @@ public class Card : MonoBehaviour
 
     private void Reveal()
     {
+        _revealTimer -= Time.deltaTime;
+        
         if (!RevealCard) return;
 
         Transform rendererTransform = _spriteRenderer.transform;
@@ -95,11 +103,11 @@ public class Card : MonoBehaviour
         {
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             
-            _angle = GameManager.Instance.CurrentPlayerIndex * (360f / GameManager.Instance.AmountOfPlayers);
+            _angle = GameManager.Instance.PlayerManager.CurrentPlayerIndex * (360f / GameManager.Instance.PlayerManager.AmountOfPlayers);
             
             print(_angle);
             
-            _pos = GameManager.Instance.GetDisplayPosition(RevealIndex);
+            _pos = GameManager.Instance.CardManager.GetDisplayPosition(RevealIndex);
             _revealTransformCalculated = true;
         }
         
@@ -114,37 +122,16 @@ public class Card : MonoBehaviour
             Quaternion.Euler(_angle, 90, 90),
             Time.deltaTime * cardResponsiveness);
         
-        RevealCompleted = rendererTransform.localEulerAngles.x >= _angle - 1f && 
-                                   rendererTransform.position.y >= _pos.y + REVEAL_Y_POSITION - 0.1f;
+        RevealCompleted = (rendererTransform.localEulerAngles.x >= _angle - 1f && 
+                                   rendererTransform.position.y >= _pos.y + REVEAL_Y_POSITION - 0.1f) || _revealTimer <= 0;
     }
-
-    // private void RevealRotation()
-    // {
-    //     _rotating = true;
-    //     Transform rendererTransform = _spriteRenderer.transform;
-    //     _adder = Mathf.Lerp(_adder, REVEAL_ANGLE, Time.deltaTime * cardResponsiveness);
-    //
-    //     rendererTransform.localEulerAngles = new Vector3(_angle + _adder,
-    //         rendererTransform.localEulerAngles.y, rendererTransform.localEulerAngles.z);
-    //
-    //     if (_adder >= REVEAL_ANGLE / 2f)
-    //     {
-    //         ForceShow = true;
-    //     }
-    //     if (_adder >= REVEAL_ANGLE - 1f)
-    //     {
-    //         RevealCompleted = true;
-    //     }
-    // }
     
     private void UpdateRenderer()
     {
         //Checks if the player has a player which it belongs to
         if(!BelongsTo)
         {
-            _spriteRenderer.sprite = ForceShow 
-                ? GameManager.Instance.GetSpriteImage(suit, rank, false) 
-                : GameManager.Instance.GetSpriteImage(suit, rank, true);
+            _spriteRenderer.sprite = ForceShow ? _front : _back;
         }
         
         if(Played || RevealCard) return;
@@ -155,8 +142,9 @@ public class Card : MonoBehaviour
         _spriteRenderer.material.SetFloat(BlendAmount,
             Mathf.Lerp(_spriteRenderer.material.GetFloat(BlendAmount), Selectable ? 0 : 1,
                 Time.deltaTime * cardResponsiveness));
-        
-        _spriteRenderer.transform.localPosition = Vector3.Lerp(_spriteRenderer.transform.localPosition, _selected ? Vector3.up * 1.1f : Vector3.zero,
+
+        _spriteRenderer.transform.localPosition = Vector3.Lerp(_spriteRenderer.transform.localPosition,
+            _selected ? Vector3.up * 1.1f : Vector3.zero,
             Time.deltaTime * cardResponsiveness);
     }
     
@@ -168,6 +156,7 @@ public class Card : MonoBehaviour
         RevealCard = false;
         RevealIndex = -1;
         _rotating = false;
+        _revealTimer = RevealTimeout;
         _revealTransformCalculated = false;
         Transform rendererTransform = _spriteRenderer.transform;
         rendererTransform.localPosition = Vector3.zero;
@@ -182,9 +171,7 @@ public class Card : MonoBehaviour
     public void UpdateSprite(Player player)
     {
         if(ForceShow) return;
-        
-        _spriteRenderer.sprite = player == BelongsTo && player ? 
-            GameManager.Instance.GetSpriteImage(suit, rank, false): 
-            GameManager.Instance.GetSpriteImage(suit, rank, true);
+
+        _spriteRenderer.sprite = player == BelongsTo && player ? _front : _back;
     }
 }

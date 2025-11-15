@@ -11,10 +11,10 @@ public class InitialisationState : GameState
     
     public override void EnterState()
     {
-        GameContext.Manager.SpawnPlayers();
-        GameContext.Manager.SpawnCards();
-        GameContext.Manager.Shuffle();
-        GameContext.Manager.DistributeCards(GameContext.Players, 5);
+        GameContext.Manager.PlayerManager.SpawnPlayers();
+        GameContext.Manager.CardManager.SpawnCards();
+        GameContext.Manager.CardManager.Shuffle();
+        GameContext.Manager.CardManager.DistributeCards(GameContext.Players, 5);
     }
 
     public override void UpdateState()
@@ -25,11 +25,11 @@ public class InitialisationState : GameState
     public override void ExitState()
     {
         GameContext.NextPlayerIndex = Random.Range(0, GameContext.Players.Count);
-        Card firstCard = GameContext.Manager.PopCard();
+        Card firstCard = GameContext.Manager.CardManager.PopCard();
         firstCard.BelongsTo = GameContext.Players[GameContext.NextPlayerIndex];
         firstCard.ForceShow = true;
         firstCard.Played = true;
-        GameContext.Manager.PlaceCards(new List<Card> { firstCard }, true);
+        GameContext.Manager.CardManager.PlaceCards(new List<Card> { firstCard }, true);
         GameContext.Manager.CanCallOut = false;
     }
 

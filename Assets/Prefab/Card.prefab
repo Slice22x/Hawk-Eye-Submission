@@ -142,6 +142,10 @@ MonoBehaviour:
   Selectable: 0
   ForceShow: 0
   Played: 0
+  RevealCard: 0
+  RevealIndex: 0
+  RevealCompleted: 0
+  RevealTimeout: 0.75
   greyscaleMaterial: {fileID: 2100000, guid: 95ef1ce149dc55b40a680351baaf6e86, type: 2}
   _spriteRenderer: {fileID: 4212923267753457823}
   cardResponsiveness: 10

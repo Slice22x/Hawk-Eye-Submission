@@ -10,12 +10,14 @@ public class PlayerRequestData
     public PlayerActionType actionType;
     public int playerIndex;
     public List<Card> sentCards;
+    public bool containsJoker;
     
-    public PlayerRequestData(PlayerActionType actionType, int playerIndex, List<Card> sentCards)
+    public PlayerRequestData(PlayerActionType actionType, int playerIndex, List<Card> sentCards, bool containsJoker = false)
     {
         this.actionType = actionType;
         this.playerIndex = playerIndex;
         this.sentCards = sentCards;
+        this.containsJoker = containsJoker;
     }
 }
 
@@ -38,7 +40,10 @@ public class Player : MonoBehaviour
     [SerializeField] private CinemachineCamera playerCamera;
     [SerializeField] private TMP_Text playerNameText;
 
-    [Space, SerializeField] private int cardMaxLimit = 4;
+    [SerializeField] private int cardMaxLimitWithoutJoker = 4;
+    [SerializeField] private int cardMaxLimitWithJoker = 2;
+    
+    private int _cardMaxLimit;
     
     private List<Card> _selectedCards;
     
@@ -130,13 +135,18 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (_selectedCards.Count >= cardMaxLimit) return;
+        _cardMaxLimit = HandContainsJoker() ? 2 : 4;
+        
+        if (_selectedCards.Count >= _cardMaxLimit) return;
         
         _selectedCards.Add(card);
+
+        if (GameManager.Instance.JustCalledOut && _selectedCards.Count >= 1 || hand.Count <= 4)
+            UnSelectableCards(card1 => card1.rank != _selectedCards[0].rank);
         
-        if(GameManager.Instance.JustCalledOut && _selectedCards.Count >= 1) UnSelectableCards(card1 => card1.rank != _selectedCards[0].rank);
+        if(HandContainsJoker()) UnSelectableCards(card1 => card1.suit != CardInfo.CardSuit.Jokers);
         
-        if(_selectedCards.Count >= cardMaxLimit) UnSelectableCards();
+        if(_selectedCards.Count >= _cardMaxLimit) UnSelectableCards();
     }
 
     private void UnselectAll()
@@ -148,13 +158,18 @@ public class Player : MonoBehaviour
         
         _selectedCards.Clear();
     }
+
+    private bool HandContainsJoker()
+    {
+        return hand.Any(card => card.suit == CardInfo.CardSuit.Jokers);
+    }
     
     public void SendPlaceRequestedData()
     {
         var buffer = new Card[_selectedCards.Count];
         
         _selectedCards.CopyTo(buffer);
-        PlayerRequestData data = new PlayerRequestData(PlayerActionType.Place, playerIndex, buffer.ToList());
+        PlayerRequestData data = new PlayerRequestData(PlayerActionType.Place, playerIndex, buffer.ToList(), HandContainsJoker());
         
         OnPlayerAction?.Invoke(data);
         
@@ -179,7 +194,7 @@ public class Player : MonoBehaviour
     
     public void SendPickUpRequestedData()
     {
-        if(!GameManager.Instance.CanPickCard) return;
+        if(!GameManager.Instance.CardManager.CanPickCard) return;
         
         PlayerRequestData data = new PlayerRequestData(PlayerActionType.PickUp, playerIndex, null);
         OnPlayerAction?.Invoke(data);

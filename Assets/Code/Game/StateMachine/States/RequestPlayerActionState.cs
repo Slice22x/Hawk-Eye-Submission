@@ -21,7 +21,8 @@ public class RequestPlayerActionState : GameState
 
     public override void EnterState()
     {
-
+        GameContext.PlayerRequestDataBuffer = null;
+        CardManager.OnUpdateJokers?.Invoke();
     }
 
     public override void UpdateState()

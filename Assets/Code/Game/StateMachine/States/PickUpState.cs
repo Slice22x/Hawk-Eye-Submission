@@ -16,7 +16,7 @@ public class PickUpState : GameState
 
     public override void UpdateState()
     {
-        Card poppedCard = GameContext.Manager.PopCard();
+        Card poppedCard = GameContext.Manager.CardManager.PopCard();
         poppedCard.gameObject.SetActive(true);
         GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex].AddCardToHand(poppedCard);
         poppedCard.AssignCardToPlayer(GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex]);

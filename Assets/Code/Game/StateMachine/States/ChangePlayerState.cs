@@ -26,7 +26,7 @@ public class ChangePlayerState : GameState
     public override void ExitState()
     {
         GameManager.OnChangePlayerCamera?.Invoke(GameContext.Players[GameContext.NextPlayerIndex]);
-        GameContext.Manager.UpdateCurrentPlayerIndex(GameContext.NextPlayerIndex);
+        GameContext.Manager.PlayerManager.UpdateCurrentPlayerIndex(GameContext.NextPlayerIndex);
         
         GameContext.LastPlayerIndex = (GameContext.CurrentPlayerIndex - 1) % GameContext.Players.Count;
         GameContext.NextPlayerIndex = (GameContext.NextPlayerIndex + 1) % GameContext.Players.Count;

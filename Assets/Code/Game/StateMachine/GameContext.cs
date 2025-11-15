@@ -29,4 +29,13 @@ public class GameContext
     public int LastPlayerIndex = -1;
 
     public float RevealTimer;
+
+    public CardInfo.CardRank JokerActive;
+
+    public CardInfo.CardRank GetPlacedJoker()
+    {
+        if (PlayerRequestDataBuffer == null) return CardInfo.CardRank.None;
+        
+        return PlayerRequestDataBuffer.sentCards.Find(card => card.suit == CardInfo.CardSuit.Jokers).rank;
+    }
 }

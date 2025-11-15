@@ -24,7 +24,7 @@ public class PlaceCardState : GameState
             }
         }
                 
-        GameContext.Manager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
+        GameContext.Manager.CardManager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
         GameContext.Manager.JustCalledOut = false;
                 
         _processed = true;
@@ -37,6 +37,8 @@ public class PlaceCardState : GameState
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
     {
+        if(GameContext.PlayerRequestDataBuffer.containsJoker) return GameStateManager.GameState.Joker;
+        
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.PlaceCard;
     }
 }
