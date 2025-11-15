@@ -12,6 +12,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
         RequestPlayerAction,
         PlaceCard,
         CallOut,
+        PickUp,
         Joker,
         Winner
     }
@@ -35,7 +36,9 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
        States.Add(GameState.Initialising, new InitialisationState(GameState.Initialising, GameContext));
        States.Add(GameState.ChangePlayer, new ChangePlayerState(GameState.ChangePlayer, GameContext));
        States.Add(GameState.RequestPlayerAction, new RequestPlayerActionState(GameState.RequestPlayerAction, GameContext));
-       //States.Add(GameState.CallOut, new CallOutState(GameState.CallOut, GameContext));
+       States.Add(GameState.PlaceCard, new PlaceCardState(GameState.PlaceCard, GameContext));
+       States.Add(GameState.CallOut, new CallOutState(GameState.CallOut, GameContext));
+       States.Add(GameState.PickUp, new PickUpState(GameState.PickUp, GameContext));
        // States.Add(GameState.Joker, new GameState(GameState.Joker, GameContext));
        // States.Add(GameState.Winner, new GameState(GameState.Winner, GameContext));
        

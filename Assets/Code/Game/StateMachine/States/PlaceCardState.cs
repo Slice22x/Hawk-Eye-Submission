@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlaceCardState : GameState
 {
+    private bool _processed;
+    
     public PlaceCardState(GameStateManager.GameState key, GameContext gameContext) : base(key, gameContext)
     {
         GameContext = gameContext;
@@ -9,21 +11,32 @@ public class PlaceCardState : GameState
     
     public override void EnterState()
     {
-        throw new System.NotImplementedException();
+        _processed = false;
     }
 
     public override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if (GameContext.Manager.JustCalledOut)
+        {
+            foreach (Card card in GameContext.PlayerRequestDataBuffer.sentCards)
+            {
+                card.ForceShow = true;
+            }
+        }
+                
+        GameContext.Manager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
+        GameContext.Manager.JustCalledOut = false;
+                
+        _processed = true;
     }
 
     public override void ExitState()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
     {
-        throw new System.NotImplementedException();
+        return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.PlaceCard;
     }
 }
