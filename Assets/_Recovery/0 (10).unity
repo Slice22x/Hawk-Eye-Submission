@@ -400,7 +400,6 @@ MonoBehaviour:
   showGizmos: 1
   LastPlayedText: {fileID: 45485682}
   RankText: {fileID: 1192858359}
-  NextRankText: {fileID: 1219504309}
   AmountText: {fileID: 213242938}
 --- !u!114 &84680456
 MonoBehaviour:
@@ -1158,7 +1157,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play
+  m_text: 'Next:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eefd0e82fde4f5a41b4766385ab3191e, type: 2}
   m_sharedMaterial: {fileID: 9165870135516695165, guid: eefd0e82fde4f5a41b4766385ab3191e, type: 2}
@@ -2735,7 +2734,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -200, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1219504309
 MonoBehaviour:
@@ -2757,7 +2756,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'RANK: Any'
+  m_text: 'RANK: 10'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eefd0e82fde4f5a41b4766385ab3191e, type: 2}
   m_sharedMaterial: {fileID: 9165870135516695165, guid: eefd0e82fde4f5a41b4766385ab3191e, type: 2}

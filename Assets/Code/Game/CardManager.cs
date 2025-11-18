@@ -78,6 +78,8 @@ public class CardManager : MonoBehaviour
         {
             for (int rank = 0; rank < 17; rank++)
             {
+                if(suit == 4 && rank <= 12 || suit < 4 && rank > 12) continue;
+                
                 Card newCard = Instantiate(cardPrefab, transform);
                 
                 newCard.suit = (CardInfo.CardSuit)suit;
@@ -158,7 +160,8 @@ public class CardManager : MonoBehaviour
             CardInfo.CardSuit.Diamonds => back ? cardInfoDiamond.cardBack : cardInfoDiamond.GetCardImage(rank),
             CardInfo.CardSuit.Spades => back ? cardInfoSpade.cardBack : cardInfoSpade.GetCardImage(rank),
             CardInfo.CardSuit.Clubs => back ? cardInfoClub.cardBack : cardInfoClub.GetCardImage(rank),
-            _ => throw new System.ArgumentOutOfRangeException(nameof(suit), suit, null)
+            CardInfo.CardSuit.Jokers => back ? cardInfoJokers.cardBack : cardInfoJokers.GetCardImage(rank),
+            _ => null
         };
     }
     

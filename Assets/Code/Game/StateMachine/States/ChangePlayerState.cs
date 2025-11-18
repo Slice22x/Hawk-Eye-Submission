@@ -28,13 +28,15 @@ public class ChangePlayerState : GameState
         GameManager.OnChangePlayerCamera?.Invoke(GameContext.Players[GameContext.NextPlayerIndex]);
         GameContext.Manager.PlayerManager.UpdateCurrentPlayerIndex(GameContext.NextPlayerIndex);
         
-        GameContext.LastPlayerIndex = (GameContext.CurrentPlayerIndex - 1) % GameContext.Players.Count;
-        GameContext.NextPlayerIndex = (GameContext.NextPlayerIndex + 1) % GameContext.Players.Count;
+        GameContext.LastPlayerIndex = (GameContext.CurrentPlayerIndex - GameContext.Direction) % GameContext.Players.Count;
+        GameContext.NextPlayerIndex = (GameContext.NextPlayerIndex + GameContext.Direction) % GameContext.Players.Count;
         
         GameContext.SwitchPlayerPrompt.gameObject.SetActive(false);
         GameContext.CanvasGroup.blocksRaycasts = true;
         GameContext.CanvasGroup.alpha = 1f;
         switched = false;
+        
+        GameContext.PreviousState = GameStateManager.GameState.ChangePlayer;
     }
     
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)

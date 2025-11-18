@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")] public TMP_Text LastPlayedText;
     public TMP_Text RankText;
+    public TMP_Text NextRankText;
     public TMP_Text AmountText;
     
     public float RadiusFromMat => radiusFromMat;
@@ -53,13 +54,16 @@ public class GameManager : MonoBehaviour
     {
         currentState = _stateManager.CurrentStateKey;
         
-        RankText.text = $"RANK: {GetLastPlayedRankText()}";
+        RankText.text = $"RANK: {GetLastPlayedRankText(CardManager.LastRank())}";
+        NextRankText.text = JustCalledOut ? "RANK: Any" : $"RANK: {GetLastPlayedRankText(CardManager.LastRank() + 1)}";
         AmountText.text = $"{CardManager.AmountOfCardsPlayedLast}";
     }
 
-    private string GetLastPlayedRankText()
+    private string GetLastPlayedRankText(CardInfo.CardRank rank)
     {
-        return CardManager.LastRank() switch
+        if (rank > CardInfo.CardRank.King) rank = CardInfo.CardRank.Ace;
+        
+        return rank switch
         {
             CardInfo.CardRank.Ace => "A",
             CardInfo.CardRank.Two => "2",

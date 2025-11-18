@@ -32,7 +32,7 @@ public class RequestPlayerActionState : GameState
 
     public override void ExitState()
     {
-
+        GameContext.PreviousState = GameStateManager.GameState.RequestPlayerAction;
     }
     
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)

@@ -31,6 +31,8 @@ public class InitialisationState : GameState
         firstCard.Played = true;
         GameContext.Manager.CardManager.PlaceCards(new List<Card> { firstCard }, true);
         GameContext.Manager.CanCallOut = false;
+        
+        GameContext.PreviousState = GameStateManager.GameState.Initialising;
     }
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)

@@ -135,7 +135,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        _cardMaxLimit = HandContainsJoker() ? 2 : 4;
+        _cardMaxLimit = SelectedContainsJoker() ? 2 : 4;
         
         if (_selectedCards.Count >= _cardMaxLimit) return;
         
@@ -144,7 +144,7 @@ public class Player : MonoBehaviour
         if (GameManager.Instance.JustCalledOut && _selectedCards.Count >= 1 || hand.Count <= 4)
             UnSelectableCards(card1 => card1.rank != _selectedCards[0].rank);
         
-        if(HandContainsJoker()) UnSelectableCards(card1 => card1.suit != CardInfo.CardSuit.Jokers);
+        if(SelectedContainsJoker() && _selectedCards.Count >= _cardMaxLimit) UnSelectableCards(card1 => card1.suit != CardInfo.CardSuit.Jokers);
         
         if(_selectedCards.Count >= _cardMaxLimit) UnSelectableCards();
     }
@@ -159,9 +159,9 @@ public class Player : MonoBehaviour
         _selectedCards.Clear();
     }
 
-    private bool HandContainsJoker()
+    private bool SelectedContainsJoker()
     {
-        return hand.Any(card => card.suit == CardInfo.CardSuit.Jokers);
+        return _selectedCards.Any(card => card.suit == CardInfo.CardSuit.Jokers);
     }
     
     public void SendPlaceRequestedData()
@@ -169,7 +169,7 @@ public class Player : MonoBehaviour
         var buffer = new Card[_selectedCards.Count];
         
         _selectedCards.CopyTo(buffer);
-        PlayerRequestData data = new PlayerRequestData(PlayerActionType.Place, playerIndex, buffer.ToList(), HandContainsJoker());
+        PlayerRequestData data = new PlayerRequestData(PlayerActionType.Place, playerIndex, buffer.ToList(), SelectedContainsJoker());
         
         OnPlayerAction?.Invoke(data);
         

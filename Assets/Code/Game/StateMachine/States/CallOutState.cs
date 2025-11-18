@@ -11,6 +11,7 @@ public class CallOutState : GameState
     private List<Card> _lastPlayedCards;
     private bool _containsJoker;
     private bool _animating;
+    private bool _bailed;
 
     private float _timer;
     
@@ -25,6 +26,7 @@ public class CallOutState : GameState
         _processed = false;
         _processedCallOut = false;
         _timer = GameContext.RevealTimer;
+        _containsJoker = false;
     }
 
     public override void UpdateState()
@@ -62,11 +64,13 @@ public class CallOutState : GameState
         _lastPlayedCards = null;
         _calledOutPositive = false;
         _animating = true;
+        
+        GameContext.PreviousState = GameStateManager.GameState.CallOut;
     }
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
     {
-        if(_containsJoker) return GameStateManager.GameState.Joker;
+        if(_containsJoker && GameContext.PreviousState != GameStateManager.GameState.Joker) return GameStateManager.GameState.Joker;
         
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.CallOut;
     }
@@ -88,13 +92,10 @@ public class CallOutState : GameState
 
     private void CheckAnimating()
     {
-        foreach (var card in _lastPlayedCards)
+        foreach (var card in _lastPlayedCards.Where(card => !card.RevealCompleted))
         {
-            if (!card.RevealCompleted)
-            {
-                _animating = true;
-                break;
-            }
+            _animating = true;
+            break;
         }
     }
     
@@ -104,7 +105,7 @@ public class CallOutState : GameState
         
         _lastPlayedCards = GameContext.Manager.CardManager.PopLastPlayedCards().ToList();
 
-        if (_lastPlayedCards.Any(card => card.suit == CardInfo.CardSuit.Jokers))
+        if (_lastPlayedCards.Any(card => card.suit == CardInfo.CardSuit.Jokers) && GameContext.PreviousState != GameStateManager.GameState.Joker)
         {
             _containsJoker = true;
             GameContext.JokerActive = _lastPlayedCards.Find(card => card.suit == CardInfo.CardSuit.Jokers).rank;
@@ -116,13 +117,18 @@ public class CallOutState : GameState
         _calledOutPositive = false;
         CardInfo.CardRank lastRank = GameContext.Manager.CardManager.LastRank();
                 
-        foreach (Card card in _lastPlayedCards)
+        foreach (var card in _lastPlayedCards.Where(card => card.rank != lastRank))
         {
-            if (card.rank != lastRank)
+            if(card.suit == CardInfo.CardSuit.Jokers) continue;
+
+            if (card.rank == CardInfo.CardRank.Bail)
             {
-                _calledOutPositive = true;
+                _calledOutPositive = false;
                 break;
             }
+            
+            _calledOutPositive = true;
+            break;
         }
         
         _processedCallOut = true;

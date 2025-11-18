@@ -17,21 +17,28 @@ public class GameContext
         RevealTimer = revealTimer;
     }
     
-    public GameManager Manager;
-    public List<Player> Players;
-    public Image SwitchPlayerPrompt;
-    public TMP_Text NextPlayerName;
+    public readonly GameManager Manager;
+    public readonly List<Player> Players;
+    public readonly Image SwitchPlayerPrompt;
+    public readonly TMP_Text NextPlayerName;
     public PlayerRequestData PlayerRequestDataBuffer;
-    public CanvasGroup CanvasGroup;
+    public readonly CanvasGroup CanvasGroup;
     
     public int NextPlayerIndex;
     public int CurrentPlayerIndex = -1;
     public int LastPlayerIndex = -1;
+    
+    /// <summary>
+    /// 1 for clockwise, -1 for counter-clockwise
+    /// </summary>
+    public int Direction = 1;
 
-    public float RevealTimer;
+    public readonly float RevealTimer;
 
     public CardInfo.CardRank JokerActive;
 
+    public GameStateManager.GameState PreviousState;
+    
     public CardInfo.CardRank GetPlacedJoker()
     {
         if (PlayerRequestDataBuffer == null) return CardInfo.CardRank.None;
