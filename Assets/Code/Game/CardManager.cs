@@ -116,11 +116,11 @@ public class CardManager : MonoBehaviour
             card.SpriteRenderer.sortingOrder = PlayedStack.Count;
             card.SpriteRenderer.transform.localPosition = Vector3.zero;
         }
-        
+
         if (firstCard || GameManager.Instance.JustCalledOut)
         {
             CardInfo.CardRank rank = cards[0].rank;
-            
+
             for (int i = 0; i < CardQueue.Length; i++)
             {
                 if (CardQueue[i] == rank)
@@ -129,7 +129,7 @@ public class CardManager : MonoBehaviour
                     break;
                 }
             }
-            
+
             return;
         }
 
@@ -138,6 +138,11 @@ public class CardManager : MonoBehaviour
         GameManager.Instance.JustCalledOut = false;
         _cardQueueIndex = (_cardQueueIndex + 1) % CardQueue.Length;
         AmountOfCardsPlayedLast = cards.Count;
+    }
+
+    public void AddCardToStack(Card card)
+    {
+        cardStack.Add(card);
     }
     
     public void Shuffle() 
@@ -229,6 +234,18 @@ public class CardManager : MonoBehaviour
     
     public void DistributeCards(List<Card> cards, List<Player> distributeTo, Player bias)
     {
+        if (cards.Count < distributeTo.Count)
+        {
+            for (int i = 0; i < cards.Count; i++)
+            {
+                cards[i].AssignCardToPlayer(bias);
+                bias.AddCardToHand(cards[i]);
+                cards.RemoveAt(i);
+            }
+
+            return;
+        }
+        
         int eachHave = cards.Count / distributeTo.Count;
         int extra = cards.Count % distributeTo.Count;
         
@@ -239,14 +256,15 @@ public class CardManager : MonoBehaviour
             cards.RemoveAt(i);
         }
         
-        for (int i = 0; i < eachHave; i++)
+        foreach (var player in distributeTo)
         {
-            foreach (var player in distributeTo)
+            for (int i = 0; i < eachHave; i++)
             {
-                Card card = cards[i];
+                Card card = cards[^1];
                 card.gameObject.SetActive(true);
                 player.AddCardToHand(card);
                 card.AssignCardToPlayer(player);
+                cards.Remove(card);
             }
         }
         

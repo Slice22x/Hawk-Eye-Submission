@@ -26,6 +26,18 @@ public class InitialisationState : GameState
     {
         GameContext.NextPlayerIndex = Random.Range(0, GameContext.Players.Count);
         Card firstCard = GameContext.Manager.CardManager.PopCard();
+
+        int iterations = 0;
+        
+        while (firstCard.suit == CardInfo.CardSuit.Jokers && iterations < 10)
+        {
+            GameContext.Manager.CardManager.AddCardToStack(firstCard);
+            firstCard = GameContext.Manager.CardManager.PopCard();
+            iterations++;
+        }
+        
+        if(iterations >= 10) Debug.LogError("Failed to find a non-joker card");
+        
         firstCard.BelongsTo = GameContext.Players[GameContext.NextPlayerIndex];
         firstCard.ForceShow = true;
         firstCard.Played = true;

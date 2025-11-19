@@ -54,9 +54,12 @@ public class CallOutState : GameState
             
         //Fix Error with negative index
         giveToPlayerIndex = giveToPlayerIndex < 0 ? GameContext.Players.Count - 1 : giveToPlayerIndex;
+        giveToPlayerIndex = giveToPlayerIndex > GameContext.Players.Count ? 0 : giveToPlayerIndex;
             
+        var giveCards = GameContext.PreviousState == GameStateManager.GameState.Joker ? new List<Card> { GameContext.PlacedJoker } : _lastPlayedCards;
+        
         GameContext.Manager.CardManager.GiveStack(GameContext.Players[giveToPlayerIndex]);
-        GameContext.Manager.CardManager.GiveCards(GameContext.Players[giveToPlayerIndex], _lastPlayedCards.ToList());
+        GameContext.Manager.CardManager.GiveCards(GameContext.Players[giveToPlayerIndex], giveCards);
 
         GameContext.Manager.CanCallOut = false;
         GameContext.Manager.JustCalledOut = true;
@@ -103,12 +106,14 @@ public class CallOutState : GameState
     {
         if(_processedCallOut) return;
         
-        _lastPlayedCards = GameContext.Manager.CardManager.PopLastPlayedCards().ToList();
+        _lastPlayedCards = GameContext.PreviousState == GameStateManager.GameState.Joker ? GameContext.LastPlayedCardsBuffer : GameContext.Manager.CardManager.PopLastPlayedCards().ToList();
 
         if (_lastPlayedCards.Any(card => card.suit == CardInfo.CardSuit.Jokers) && GameContext.PreviousState != GameStateManager.GameState.Joker)
         {
             _containsJoker = true;
+            GameContext.LastPlayedCardsBuffer = _lastPlayedCards;
             GameContext.JokerActive = _lastPlayedCards.Find(card => card.suit == CardInfo.CardSuit.Jokers).rank;
+            GameContext.PlacedJoker = _lastPlayedCards.Find(card => card.suit == CardInfo.CardSuit.Jokers);
             _processedCallOut = true;
         }
 
@@ -119,13 +124,13 @@ public class CallOutState : GameState
                 
         foreach (var card in _lastPlayedCards.Where(card => card.rank != lastRank))
         {
-            if(card.suit == CardInfo.CardSuit.Jokers) continue;
-
             if (card.rank == CardInfo.CardRank.Bail)
             {
                 _calledOutPositive = false;
                 break;
             }
+            
+            if(card.suit == CardInfo.CardSuit.Jokers) continue;
             
             _calledOutPositive = true;
             break;

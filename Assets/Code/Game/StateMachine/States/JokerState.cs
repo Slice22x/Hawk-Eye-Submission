@@ -37,13 +37,30 @@ public class JokerState : GameState
             {
                 case CardInfo.CardRank.Clown:
                     var cards = GameContext.Manager.CardManager.PlayedStack;
+                    
                     Player current = GameContext.Players[GameContext.CurrentPlayerIndex];
+                    
                     var players =
                         GameContext.Manager.PlayerManager.GetPlayersExcluding(current);
+                    
                     GameContext.Manager.CardManager.DistributeCards(cards, players, current);
+                    GameContext.Manager.CardManager.PlayedStack.Clear();
+                    
+                    current.AddCardToHand(GameContext.PlacedJoker);
+                    GameContext.PlacedJoker.AssignCardToPlayer(current);
+                    GameContext.PlacedJoker = null;
+                    
+                    GameContext.JokerActive = CardInfo.CardRank.None;
+                    
+                    GameContext.Manager.CardManager.PlayedJokers.Remove(data);
+                    
+                    GameContext.Manager.CanCallOut = false;
+                    GameContext.Manager.JustCalledOut = true;
+                    _processed = true;
                     break;
                 case CardInfo.CardRank.Jester:
                     GameContext.Direction *= -1;
+                    
                     _callout = true;
                     break;
                 case CardInfo.CardRank.Bail:
@@ -51,7 +68,6 @@ public class JokerState : GameState
                     _callout = true;
                     break;
             }
-            
         }
     }
 

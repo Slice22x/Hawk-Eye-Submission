@@ -36,6 +36,8 @@ public class GameContext
     public readonly float RevealTimer;
 
     public CardInfo.CardRank JokerActive;
+    public Card PlacedJoker;
+    public List<Card> LastPlayedCardsBuffer;
 
     public GameStateManager.GameState PreviousState;
     
