@@ -22,6 +22,8 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     [SerializeField] private Image switchPlayerPrompt;
     [SerializeField] private TMP_Text nextPlayerName;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup winnerCanvasGroup;
+    [SerializeField] private float alphaResponsiveness;
     
     [SerializeField] private float revealTimer;
     
@@ -69,7 +71,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     new void Start()
     {
         GameContext = new GameContext(GameManager.Instance, GameManager.Instance.PlayerManager.Players, switchPlayerPrompt,
-            nextPlayerName, null, canvasGroup, revealTimer);
+            nextPlayerName, null, canvasGroup, revealTimer, winnerCanvasGroup, alphaResponsiveness);
         
         InitialiseStates();
         

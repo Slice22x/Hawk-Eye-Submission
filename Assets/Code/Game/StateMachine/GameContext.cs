@@ -6,7 +6,8 @@ using TMPro;
 public class GameContext
 {
     public GameContext(GameManager manager, List<Player> players, Image switchPlayerPrompt,
-        TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup, float revealTimer)
+        TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup,
+        float revealTimer, CanvasGroup winnerCanvasGroup, float alphaResponsiveness)
     {
         Manager = manager;
         Players = players;
@@ -15,14 +16,17 @@ public class GameContext
         PlayerRequestDataBuffer = playerRequestData;
         CanvasGroup = canvasGroup;
         RevealTimer = revealTimer;
+        WinnerCanvasGroup = winnerCanvasGroup;
+        AlphaResponsiveness = alphaResponsiveness;
     }
-    
+
     public readonly GameManager Manager;
     public readonly List<Player> Players;
     public readonly Image SwitchPlayerPrompt;
     public readonly TMP_Text NextPlayerName;
     public PlayerRequestData PlayerRequestDataBuffer;
     public readonly CanvasGroup CanvasGroup;
+    public readonly CanvasGroup WinnerCanvasGroup;
     
     public int NextPlayerIndex;
     public int CurrentPlayerIndex = -1;
@@ -33,6 +37,8 @@ public class GameContext
     /// </summary>
     public int Direction = 1;
 
+    public float AlphaResponsiveness;
+    
     public readonly float RevealTimer;
 
     public CardInfo.CardRank JokerActive;

@@ -28,7 +28,10 @@ public class WinnerState : GameState
 
     public override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if(_winnerDecided)
+        {
+            GameContext.WinnerCanvasGroup.alpha = Mathf.Lerp(GameContext.WinnerCanvasGroup.alpha, 1, Time.deltaTime * 5f);
+        }
     }
 
     public override void ExitState()

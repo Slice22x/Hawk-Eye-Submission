@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     private List<Card> _selectedCards;
     private List<CardInfo.CardRank> _playedRanks;
     
-    private float _xBoundPosition => 0.01965f * cardDisplayWidth;
+    private float _xBoundPosition => 0.01965f * cardDisplayWidth + 0.1f;
     private const float Y_POSITION = -0.009f;
     private const float Z_POSITION = 0.0211f;
     private const float CARD_SCALE = 0.001f;

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Grid
-  m_Shader: {fileID: -6465566751694194690, guid: 9c82aa3fdf9b4a841a5d78ab22898e93, type: 3}
+  m_Name: GridCanvas
+  m_Shader: {fileID: -6465566751694194690, guid: 0c79ad3bf3cf4ce43b54713e58941dfc, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -18,12 +18,15 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses:
-  - MOTIONVECTORS
+  disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -38,26 +41,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _Scroll_Speed: 0.001
+    - _ColorMask: 15
+    - _Fresnel_Power: 0.96
+    - _Scroll_Speed: 0.45
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UIMaskSoftnessX: 1
+    - _UIMaskSoftnessY: 1
     m_Colors:
-    - _Complimentry_Colour: {r: 0.14117646, g: 0.32156855, b: 0.23137257, a: 1}
-    - _Frequency: {r: 500, g: 500, b: 0, a: 0}
-    - _Main_Colour: {r: 0.34901956, g: 0.7568628, b: 0.20784307, a: 1}
+    - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
+    - _Complimentry_Colour: {r: 0.078431375, g: 0.627451, b: 0.18039216, a: 1}
+    - _Frequency: {r: 0.85, g: 0.85, b: 0, a: 0}
+    - _Fresnel_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
+    - _Main_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
     - _Scroll_Direction: {r: -1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &9174518244654162333
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
-  version: 10
