@@ -52,22 +52,22 @@ public class JokerState : GameState
                     
                     GameContext.JokerActive = CardInfo.CardRank.None;
                     
-                    GameContext.Manager.CardManager.PlayedJokers.Remove(data);
-                    
                     GameContext.Manager.CanCallOut = false;
                     GameContext.Manager.JustCalledOut = true;
                     _processed = true;
                     break;
                 case CardInfo.CardRank.Jester:
                     GameContext.Direction *= -1;
-                    
                     _callout = true;
                     break;
                 case CardInfo.CardRank.Bail:
+                case CardInfo.CardRank.Spy:
                 default:
                     _callout = true;
                     break;
             }
+            
+            GameContext.Manager.CardManager.PlayedJokers.Remove(data);
         }
     }
 

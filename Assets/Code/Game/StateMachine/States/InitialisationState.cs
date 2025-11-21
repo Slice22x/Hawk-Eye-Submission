@@ -14,7 +14,7 @@ public class InitialisationState : GameState
         GameContext.Manager.PlayerManager.SpawnPlayers();
         GameContext.Manager.CardManager.SpawnCards();
         GameContext.Manager.CardManager.Shuffle();
-        GameContext.Manager.CardManager.DistributeCards(GameContext.Players, 5);
+        GameContext.Manager.CardManager.DistributeCards(GameContext.Players, 7);
     }
 
     public override void UpdateState()
@@ -29,14 +29,16 @@ public class InitialisationState : GameState
 
         int iterations = 0;
         
-        while (firstCard.suit == CardInfo.CardSuit.Jokers && iterations < 10)
+        while (firstCard.Suit == CardInfo.CardSuit.Jokers && iterations < 10)
         {
             GameContext.Manager.CardManager.AddCardToStack(firstCard);
-            firstCard = GameContext.Manager.CardManager.PopCard();
+            firstCard = GameContext.Manager.CardManager.PopCard(0);
             iterations++;
         }
-        
-        if(iterations >= 10) Debug.LogError("Failed to find a non-joker card");
+
+        if (iterations >= 10)
+            Debug.LogError(
+                $"Failed to find a non-joker card. Cards: {GameContext.Manager.CardManager.CardStack[^1]}, {GameContext.Manager.CardManager.CardStack[^2]}");
         
         firstCard.BelongsTo = GameContext.Players[GameContext.NextPlayerIndex];
         firstCard.ForceShow = true;

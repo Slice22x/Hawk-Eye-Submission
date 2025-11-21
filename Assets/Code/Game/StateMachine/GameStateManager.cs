@@ -40,7 +40,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
        States.Add(GameState.CallOut, new CallOutState(GameState.CallOut, GameContext));
        States.Add(GameState.PickUp, new PickUpState(GameState.PickUp, GameContext));
        States.Add(GameState.Joker, new JokerState(GameState.Joker, GameContext));
-       // States.Add(GameState.Winner, new WinnerState(GameState.Winner, GameContext));
+       States.Add(GameState.Winner, new WinnerState(GameState.Winner, GameContext));
        
        CurrentState = States[GameState.Initialising];
     }

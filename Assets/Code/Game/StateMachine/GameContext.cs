@@ -45,6 +45,6 @@ public class GameContext
     {
         if (PlayerRequestDataBuffer == null) return CardInfo.CardRank.None;
         
-        return PlayerRequestDataBuffer.sentCards.Find(card => card.suit == CardInfo.CardSuit.Jokers).rank;
+        return PlayerRequestDataBuffer.sentCards.Find(card => card.Suit == CardInfo.CardSuit.Jokers).Rank;
     }
 }

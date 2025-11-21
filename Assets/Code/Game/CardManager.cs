@@ -46,6 +46,11 @@ public class CardManager : MonoBehaviour
     public int MaxCardRevealed;
     public CardInfo.CardRank[] CardQueue;
     public int JokerTurnsTillSafe = 1;
+    
+    public CardInfo.CardRank CurrentRank => CardQueue[(_cardQueueIndex + 1) % CardQueue.Length];
+
+    public List<Card> CardStack => cardStack;
+    
     public bool CanPickCard => cardStack.Count > 0;
     
     private PlayerManager _playerManager;
@@ -82,8 +87,8 @@ public class CardManager : MonoBehaviour
                 
                 Card newCard = Instantiate(cardPrefab, transform);
                 
-                newCard.suit = (CardInfo.CardSuit)suit;
-                newCard.rank = (CardInfo.CardRank)rank;
+                newCard.Suit = (CardInfo.CardSuit)suit;
+                newCard.Rank = (CardInfo.CardRank)rank;
 
                 newCard.name =
                     $"{System.Enum.GetName(typeof(CardInfo.CardRank), rank)} of {System.Enum.GetName(typeof(CardInfo.CardSuit), suit)}";
@@ -119,7 +124,7 @@ public class CardManager : MonoBehaviour
 
         if (firstCard || GameManager.Instance.JustCalledOut)
         {
-            CardInfo.CardRank rank = cards[0].rank;
+            CardInfo.CardRank rank = cards[0].Rank;
 
             for (int i = 0; i < CardQueue.Length; i++)
             {
@@ -178,6 +183,28 @@ public class CardManager : MonoBehaviour
         return poppedCard;
     }
 
+    public List<Card> PopCards(int amount)
+    {
+        var iterations = Mathf.Min(amount, CardStack.Count);
+        
+        var cards = new List<Card>();
+        
+        for (int i = 0; i < iterations; i++)
+        {
+            cards.Add(PopCard());
+        }
+        
+        return cards;
+    }
+    
+    public Card PopCard(int index)
+    {
+        Card poppedCard = cardStack[index];
+        cardStack.RemoveAt(index);
+        
+        return poppedCard;
+    }
+    
     public Card[] PopLastPlayedCards()
     {
         var cards = new Card[AmountOfCardsPlayedLast];
@@ -212,6 +239,9 @@ public class CardManager : MonoBehaviour
     {
         foreach (Card card in cards)
         {
+            //Checks if the card is null efficiently
+            if(!card) continue;
+            
             card.gameObject.SetActive(true);
             card.AssignCardToPlayer(giveTo);
             giveTo.AddCardToHand(card);

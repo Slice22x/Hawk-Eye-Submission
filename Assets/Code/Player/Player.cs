@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     private int _cardMaxLimit;
     
     private List<Card> _selectedCards;
+    private List<CardInfo.CardRank> _playedRanks;
     
     private float _xBoundPosition => 0.01965f * cardDisplayWidth;
     private const float Y_POSITION = -0.009f;
@@ -53,6 +54,9 @@ public class Player : MonoBehaviour
     private const float CARD_SCALE = 0.001f;
     private const int SORTING_ORDER = 52;
     private const float BASE_CARD_SPACING = 0.5f;
+    private const int CARD_SELECT_LIMIT = 4;
+    private const int CARD_SELECT_LIMIT_WITH_JOKER = 2;
+    private const int HIGHEST_CAMERA_PRIORITY = 100;
     
     public delegate void PlayerAction(PlayerRequestData data);
     public static PlayerAction OnPlayerAction;
@@ -66,6 +70,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         _selectedCards = new List<Card>();
+        _playedRanks = new List<CardInfo.CardRank>();
     }
 
     // Update is called once per frame
@@ -90,7 +95,7 @@ public class Player : MonoBehaviour
     
     private void SetCamera(Player player)
     {
-        playerCamera.Priority = player == this ? 100 : 0;
+        playerCamera.Priority = player == this ? HIGHEST_CAMERA_PRIORITY : 0;
         
         foreach (Card card in hand)
         {
@@ -112,7 +117,7 @@ public class Player : MonoBehaviour
     {
         foreach (Card card in hand)
         {
-            if(!filter(card)) continue;
+            if(!filter(card) || _selectedCards.Contains(card)) continue;
             
             card.Selectable = false;
         }
@@ -122,6 +127,8 @@ public class Player : MonoBehaviour
     {
         foreach (Card card in hand)
         {
+            if(_selectedCards.Contains(card)) continue;
+            
             card.Selectable = true;
         }
     }
@@ -132,23 +139,61 @@ public class Player : MonoBehaviour
         {
             _selectedCards.Remove(card);
             SelectableCards();
+            UpdatePlayedRank();
             return;
         }
 
-        _cardMaxLimit = SelectedContainsJoker() ? 2 : 4;
+        _cardMaxLimit = SelectedContainsJoker(card) && !GameManager.Instance.JustCalledOut
+            ? CARD_SELECT_LIMIT_WITH_JOKER
+            : CARD_SELECT_LIMIT;
         
         if (_selectedCards.Count >= _cardMaxLimit) return;
         
         _selectedCards.Add(card);
+        
+        SelectableCardsConditions();
+    }
 
-        if (GameManager.Instance.JustCalledOut && _selectedCards.Count >= 1 || hand.Count <= 4)
-            UnSelectableCards(card1 => card1.rank != _selectedCards[0].rank);
+    private void SelectableCardsConditions()
+    {
+        if (GameManager.Instance.JustCalledOut)
+        {
+            //No Jokers can be played after someone has called out
+            UnSelectableCards(card => card.Suit == CardInfo.CardSuit.Jokers);
+
+            //Only One rank of cards can be played at once after a call-out
+            if(_selectedCards.Count >= 1) UnSelectableCards(card => card.Rank != _selectedCards[0].Rank);
+            
+            //Prevents going over card limit
+            if(_selectedCards.Count >= _cardMaxLimit) UnSelectableCards();
+            
+            return;
+        }
         
-        if(SelectedContainsJoker() && _selectedCards.Count >= _cardMaxLimit) UnSelectableCards(card1 => card1.suit != CardInfo.CardSuit.Jokers);
+        UpdatePlayedRank();
         
+        //If the hand count goes below 4 then only 1 rank of card can be selected after or any rank currently selected
+        if (hand.Count <= CARD_SELECT_LIMIT || hand.Count - _selectedCards.Count <= CARD_SELECT_LIMIT)
+            UnSelectableCards(card => !_playedRanks.Contains(card.Rank));
+
+        //If 2 cards have been selected already then no more Jokers can be played after
+        if (_selectedCards.Count >= CARD_SELECT_LIMIT_WITH_JOKER && !SelectedContainsJoker())
+            UnSelectableCards(card => card.Suit == CardInfo.CardSuit.Jokers);
+        
+        //Prevents going over card limit
         if(_selectedCards.Count >= _cardMaxLimit) UnSelectableCards();
     }
 
+    private void UpdatePlayedRank()
+    {
+        _playedRanks.Clear();
+        
+        foreach (Card card in hand)
+        {
+            if(_selectedCards.Contains(card) && !_playedRanks.Contains(card.Rank)) _playedRanks.Add(card.Rank);
+        }
+    }
+    
     private void UnselectAll()
     {
         foreach (Card card in _selectedCards)
@@ -161,11 +206,18 @@ public class Player : MonoBehaviour
 
     private bool SelectedContainsJoker()
     {
-        return _selectedCards.Any(card => card.suit == CardInfo.CardSuit.Jokers);
+        return _selectedCards.Any(card => card.Suit == CardInfo.CardSuit.Jokers);
+    }
+    
+    private bool SelectedContainsJoker(Card selectedCard)
+    {
+        return selectedCard.Suit == CardInfo.CardSuit.Jokers || _selectedCards.Any(card => card.Suit == CardInfo.CardSuit.Jokers);
     }
     
     public void SendPlaceRequestedData()
     {
+        if (_selectedCards.Count == 0) return; 
+        
         var buffer = new Card[_selectedCards.Count];
         
         _selectedCards.CopyTo(buffer);
@@ -216,7 +268,7 @@ public class Player : MonoBehaviour
         hand[0].transform.localPosition = new Vector3(-_xBoundPosition, Y_POSITION, Z_POSITION);
         hand[0].SpriteRenderer.sortingOrder = SORTING_ORDER + hand.Count;
 
-        if (hand.Count > 2)
+        if (hand.Count >= 2)
         {
             for (int i = 1; i < hand.Count; i++)
             {

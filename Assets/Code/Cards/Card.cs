@@ -1,19 +1,21 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Card : MonoBehaviour
 {
     private static readonly int BlendAmount = Shader.PropertyToID("_BlendAmount");
+    private static readonly int ShowLines = Shader.PropertyToID("_ShowLines");
 
     public Card(CardInfo.CardSuit suit, CardInfo.CardRank rank)
     {
-        this.suit = suit;
-        this.rank = rank;
+        this.Suit = suit;
+        this.Rank = rank;
     }
 
-    public CardInfo.CardSuit suit;
-    public CardInfo.CardRank rank;
+    public CardInfo.CardSuit Suit;
+    public CardInfo.CardRank Rank;
     public bool Selectable;
     public bool ForceShow;
     public bool Played;
@@ -27,7 +29,6 @@ public class Card : MonoBehaviour
     private float _angle;
     private float _adder;
     private Vector3 _pos;
-    private bool _rotating;
     private float _revealTimer;
 
     [SerializeField] private Material greyscaleMaterial;
@@ -50,13 +51,16 @@ public class Card : MonoBehaviour
     {
         _spriteRenderer.material = new Material(greyscaleMaterial);
         _revealTimer = RevealTimeout;
-        _front = GameManager.Instance.CardManager.GetSpriteImage(suit, rank, false);
-        _back = GameManager.Instance.CardManager.GetSpriteImage(suit, rank, true);
+        _front = GameManager.Instance.CardManager.GetSpriteImage(Suit, Rank, false);
+        _back = GameManager.Instance.CardManager.GetSpriteImage(Suit, Rank, true);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!BelongsTo)
+            _spriteRenderer.material.SetFloat(ShowLines, 0);
+        
         Reveal();
         
         if((GameManager.Instance.PlayerManager.CurrentPlayer != BelongsTo || 
@@ -143,6 +147,10 @@ public class Card : MonoBehaviour
             Mathf.Lerp(_spriteRenderer.material.GetFloat(BlendAmount), Selectable ? 0 : 1,
                 Time.deltaTime * cardResponsiveness));
 
+        bool show = (GameManager.Instance.CardManager.CurrentRank == Rank || GameManager.Instance.JustCalledOut) && Selectable && !Played;
+        
+        _spriteRenderer.material.SetFloat(ShowLines, show ? 1 : 0);
+        
         _spriteRenderer.transform.localPosition = Vector3.Lerp(_spriteRenderer.transform.localPosition,
             _selected ? Vector3.up * 1.1f : Vector3.zero,
             Time.deltaTime * cardResponsiveness);
@@ -152,10 +160,10 @@ public class Card : MonoBehaviour
     {
         BelongsTo = assignTo;
         UpdateSprite(BelongsTo);
+        _spriteRenderer.material.SetFloat(ShowLines, 0);
         _selected = false;
         RevealCard = false;
         RevealIndex = -1;
-        _rotating = false;
         _revealTimer = RevealTimeout;
         _revealTransformCalculated = false;
         Transform rendererTransform = _spriteRenderer.transform;

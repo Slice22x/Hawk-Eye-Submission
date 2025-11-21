@@ -39,6 +39,8 @@ public class PlaceCardState : GameState
     {
         if(GameContext.PlayerRequestDataBuffer.containsJoker) return GameStateManager.GameState.Joker;
         
+        if(GameContext.Players[GameContext.CurrentPlayerIndex].hand.Count == 0) return GameStateManager.GameState.Winner;
+        
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.PlaceCard;
     }
 }

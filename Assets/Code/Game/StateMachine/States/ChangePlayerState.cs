@@ -11,6 +11,9 @@ public class ChangePlayerState : GameState
     
     public override void EnterState()
     {
+        if(GameContext.NextPlayerIndex < 0) GameContext.NextPlayerIndex = GameContext.Players.Count - 1;
+        if(GameContext.NextPlayerIndex >= GameContext.Players.Count) GameContext.NextPlayerIndex = 0;
+        
         GameManager.OnChangePlayerCamera?.Invoke(null);
         GameContext.SwitchPlayerPrompt.gameObject.SetActive(true);
         GameContext.NextPlayerName.text = $"Switch To Player: {GameContext.Players[GameContext.NextPlayerIndex].playerName}";
