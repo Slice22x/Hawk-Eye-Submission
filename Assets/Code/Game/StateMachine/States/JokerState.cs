@@ -84,6 +84,10 @@ public class JokerState : GameState
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
     {
         if (_callout) return GameStateManager.GameState.CallOut;
+
+        if (GameContext.Players[GameContext.CurrentPlayerIndex].hand.Count == 0 &&
+            GameContext.PreviousState == GameStateManager.GameState.PlaceCard)
+            return GameStateManager.GameState.Winner;
         
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.Joker;
     }

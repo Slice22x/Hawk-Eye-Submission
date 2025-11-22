@@ -42,7 +42,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _Fresnel_Power: 0.96
+    - _Fresnel_Power: 0.75
     - _Scroll_Speed: 0.45
     - _Stencil: 0
     - _StencilComp: 8
@@ -53,10 +53,10 @@ Material:
     - _UIMaskSoftnessY: 1
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Complimentry_Colour: {r: 0.078431375, g: 0.627451, b: 0.18039216, a: 1}
+    - _Complimentry_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
     - _Frequency: {r: 0.85, g: 0.85, b: 0, a: 0}
-    - _Fresnel_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
-    - _Main_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
+    - _Fresnel_Colour: {r: 0.078431375, g: 0.627451, b: 0.18039216, a: 1}
+    - _Main_Colour: {r: 0.6117647, g: 0.85882354, b: 0.2627451, a: 1}
     - _Scroll_Direction: {r: -1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

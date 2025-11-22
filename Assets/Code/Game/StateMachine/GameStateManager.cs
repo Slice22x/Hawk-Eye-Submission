@@ -19,10 +19,15 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
 
     public GameContext GameContext;
 
+    [Space, SerializeField] private int startingCardAmount;
+    
     [SerializeField] private Image switchPlayerPrompt;
     [SerializeField] private TMP_Text nextPlayerName;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private CanvasGroup winnerCanvasGroup;
+    [SerializeField] private Image winnerCardImage;
+    [SerializeField] private TMP_Text winnerCardTextName;
+    [SerializeField] private Button returnToMenuButton;
     [SerializeField] private float alphaResponsiveness;
     
     [SerializeField] private float revealTimer;
@@ -71,7 +76,8 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     new void Start()
     {
         GameContext = new GameContext(GameManager.Instance, GameManager.Instance.PlayerManager.Players, switchPlayerPrompt,
-            nextPlayerName, null, canvasGroup, revealTimer, winnerCanvasGroup, alphaResponsiveness);
+            nextPlayerName, null, canvasGroup, revealTimer, winnerCanvasGroup, alphaResponsiveness,
+            winnerCardImage, winnerCardTextName, returnToMenuButton, startingCardAmount);
         
         InitialiseStates();
         

@@ -137,8 +137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4728db7866b9f9a4daad885ed01c8caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Card
-  suit: 0
-  rank: 0
+  Suit: 0
+  Rank: 0
   Selectable: 0
   ForceShow: 0
   Played: 0
@@ -168,7 +168,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 5, z: 1}
+  m_Size: {x: 3, y: 5, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4013231200832476936
 Rigidbody:

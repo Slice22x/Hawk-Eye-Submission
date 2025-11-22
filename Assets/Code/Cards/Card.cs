@@ -109,8 +109,6 @@ public class Card : MonoBehaviour
             
             _angle = GameManager.Instance.PlayerManager.CurrentPlayerIndex * (360f / GameManager.Instance.PlayerManager.AmountOfPlayers);
             
-            print(_angle);
-            
             _pos = GameManager.Instance.CardManager.GetDisplayPosition(RevealIndex);
             _revealTransformCalculated = true;
         }

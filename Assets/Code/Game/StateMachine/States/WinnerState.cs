@@ -5,6 +5,11 @@ public class WinnerState : GameState
 {
     private bool _winnerDecided;
     private bool _processed;
+
+    private float _timer = 0.75f;
+    private Shake _nameShake;
+    private string _winnerName;
+    
     public WinnerState(GameStateManager.GameState key, GameContext gameContext) : base(key, gameContext)
     {
         GameContext = gameContext;
@@ -21,26 +26,76 @@ public class WinnerState : GameState
         }
         else
         {
+            if (GameContext.Manager.JustCalledOut)
+            {
+                foreach (Card card in GameContext.PlayerRequestDataBuffer.sentCards)
+                {
+                    card.ForceShow = true;
+                }
+            }
+                
+            GameContext.Manager.CardManager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
+            GameContext.Manager.JustCalledOut = false;
+            
             _winnerDecided = true;
             _processed = false;
+            _winnerName = GameContext.Players[GameContext.CurrentPlayerIndex].playerName;
         }
+        
+        if(_winnerDecided) _nameShake = GameContext.WinnerCardTextName.GetComponent<Shake>();
     }
 
     public override void UpdateState()
     {
-        if(_winnerDecided)
-        {
-            GameContext.WinnerCanvasGroup.alpha = Mathf.Lerp(GameContext.WinnerCanvasGroup.alpha, 1, Time.deltaTime * 5f);
-        }
+        if(!_winnerDecided) return;
+
+        var cardTransform = GameContext.WinnerCardImage.transform;
+        
+        GameContext.WinnerCanvasGroup.alpha = Mathf.Lerp(GameContext.WinnerCanvasGroup.alpha, 1,
+            Time.deltaTime * GameContext.AlphaResponsiveness);
+        GameContext.WinnerCanvasGroup.blocksRaycasts = true;
+        GameContext.WinnerCanvasGroup.interactable = true;
+        
+        cardTransform.localPosition = Vector3.Lerp(cardTransform.localPosition, Vector3.zero, Time.deltaTime * GameContext.AlphaResponsiveness);
+
+        if (cardTransform.localPosition.y <= -1f) return;
+
+        _timer -= Time.deltaTime;
+        GameContext.WinnerCardTextName.text = _winnerName;
+        
+        if(_timer > 0f) return;
+
+        _nameShake.gameObject.SetActive(true);
+        _nameShake.Active = true;
+        
+        if(!_nameShake.Done) return;
+        
+        GameContext.ReturnToMenuButton.transform.parent.gameObject.SetActive(true);
     }
 
     public override void ExitState()
     {
-        throw new System.NotImplementedException();
+        if (!_winnerDecided)
+        {
+            if (GameContext.Manager.JustCalledOut)
+            {
+                foreach (Card card in GameContext.PlayerRequestDataBuffer.sentCards)
+                {
+                    card.ForceShow = true;
+                }
+            }
+                
+            GameContext.Manager.CardManager.PlaceCards(GameContext.PlayerRequestDataBuffer.sentCards);
+            GameContext.Manager.JustCalledOut = false;
+        }
+        
+        GameContext.PreviousState = GameStateManager.GameState.Winner;
     }
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)
     {
+        if (_winnerDecided) return GameStateManager.GameState.Winner;
+        
         return _processed ? GameStateManager.GameState.ChangePlayer : GameStateManager.GameState.Winner;
     }
 }

@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     private List<Card> _selectedCards;
     private List<CardInfo.CardRank> _playedRanks;
     
-    private float _xBoundPosition => 0.01965f * cardDisplayWidth + 0.1f;
+    private float _xBoundPosition => 0.01965f * (cardDisplayWidth + 0.05f);
     private const float Y_POSITION = -0.009f;
     private const float Z_POSITION = 0.0211f;
     private const float CARD_SCALE = 0.001f;
@@ -79,7 +79,12 @@ public class Player : MonoBehaviour
         UpdateHandPositions();
         playerNameText.text = playerName;
         
-        cardDisplayWidth = Mathf.Lerp(BASE_CARD_SPACING, 1f, hand.Count / 52f);
+        cardDisplayWidth = Mathf.Lerp(BASE_CARD_SPACING, 1f, hand.Count / 32f);
+
+        if (playerCamera.Priority == HIGHEST_CAMERA_PRIORITY)
+        {
+            GameManager.Instance.PlaceButton.interactable = _selectedCards.Count > 0;
+        }
     }
 
     public void AddCardToHand(Card card)

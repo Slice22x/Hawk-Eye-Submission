@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class GameManager : MonoBehaviour
     public TMP_Text RankText;
     public TMP_Text NextRankText;
     public TMP_Text AmountText;
+    public Button PlaceButton;
+    [SerializeField] private Button callOutButton;
+    [SerializeField] private Button pickUpButton;
     
     public float RadiusFromMat => radiusFromMat;
     
@@ -57,6 +61,9 @@ public class GameManager : MonoBehaviour
         RankText.text = $"RANK: {GetLastPlayedRankText(CardManager.LastRank())}";
         NextRankText.text = JustCalledOut ? "RANK: Any" : $"RANK: {GetLastPlayedRankText(CardManager.LastRank() + 1)}";
         AmountText.text = $"{CardManager.AmountOfCardsPlayedLast}";
+        
+        callOutButton.interactable = CanCallOut;
+        pickUpButton.interactable = CardManager.CardStack.Count > 0;
     }
 
     private string GetLastPlayedRankText(CardInfo.CardRank rank)
