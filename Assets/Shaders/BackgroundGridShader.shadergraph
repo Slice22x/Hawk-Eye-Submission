@@ -1970,7 +1970,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Complimentry Colour",
     "m_DefaultReferenceName": "_Complimentry_Colour",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_Complementary_Colour",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",

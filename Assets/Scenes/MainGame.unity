@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb935cba856a9de4e93f953b61fdb6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
-  startingCardAmount: 7
+  startingCardAmount: 52
   switchPlayerPrompt: {fileID: 1434042704}
   nextPlayerName: {fileID: 317390253}
   canvasGroup: {fileID: 1211988385}
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   playerPrefab: {fileID: 4149882040566837242, guid: ddd885604866f3942b68b71cadfd31ec, type: 3}
-  AmountOfPlayers: 4
+  AmountOfPlayers: 1
   Players: []
 --- !u!114 &84680458
 MonoBehaviour:

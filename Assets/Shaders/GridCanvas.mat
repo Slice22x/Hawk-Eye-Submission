@@ -53,10 +53,11 @@ Material:
     - _UIMaskSoftnessY: 1
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
+    - _Complementary_Colour: {r: 0.4745098, g: 0.22745098, b: 0.5019608, a: 1}
     - _Complimentry_Colour: {r: 0.34901962, g: 0.75686276, b: 0.20784314, a: 1}
     - _Frequency: {r: 0.85, g: 0.85, b: 0, a: 0}
-    - _Fresnel_Colour: {r: 0.078431375, g: 0.627451, b: 0.18039216, a: 1}
-    - _Main_Colour: {r: 0.6117647, g: 0.85882354, b: 0.2627451, a: 1}
+    - _Fresnel_Colour: {r: 0.2509804, g: 0.2, b: 0.3254902, a: 1}
+    - _Main_Colour: {r: 0.7372549, g: 0.2901961, b: 0.60784316, a: 1}
     - _Scroll_Direction: {r: -1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

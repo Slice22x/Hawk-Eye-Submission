@@ -14,7 +14,7 @@ public class Grow : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _cachedTransform = transform;
+        _cachedTransform = target ? target : transform;
         
         _startScale = _cachedTransform.localScale;
     }
