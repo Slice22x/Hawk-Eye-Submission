@@ -107,7 +107,12 @@ public class TitleScreenElement : MonoBehaviour
 
     public void UpdatePlayerCount(string playerName)
     {
-        if(string.IsNullOrEmpty(playerName))
+        if (string.IsNullOrEmpty(playerName))
+        {
+            return;
+        }
+        
+        if(string.IsNullOrEmpty(playerName) && _playerIndex < 0)
         {
             GameSettings.Instance.PlayerNames.RemoveAt(_playerIndex);
             _playerIndex = -1;
@@ -143,7 +148,7 @@ public class TitleScreenElement : MonoBehaviour
                         _usePosition = true;
                         break;
                     case ElementActionType.Parent:
-                        print(setting.parent);
+                        //print(setting.parent);
                         _targetParent = setting.parent;
                         break;
                     case ElementActionType.Scale:

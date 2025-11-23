@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameSettings : MonoBehaviour
 {
+    public delegate void Transitioning();
+    public static Transitioning OnTransitioning;
+    
     public static GameSettings Instance;
     [SerializeField] private int minRemainingCards;
     [SerializeField] private Fade transitionScreen;
@@ -17,6 +20,8 @@ public class GameSettings : MonoBehaviour
     public int GainCardsAfterPlacing;
     
     private string _nextSceneName;
+    private bool _transitioning;
+    private bool _startTransition;
     
     private const int PLAYABLE_CARDS = 56;
     private const string GAME_SCENE = "MainGame";
@@ -40,14 +45,16 @@ public class GameSettings : MonoBehaviour
     private void StartTransitionGame()
     {
         transitionScreen.Active = false;
-        SceneManager.LoadScene(GAME_SCENE);
+        _transitioning = false;
+        _startTransition = true;
         _nextSceneName = GAME_SCENE;
     }
 
     public void StartTransitionTitle()
     {
         transitionScreen.Active = false;
-        SceneManager.LoadScene(TITLE_SCENE);
+        _transitioning = false;
+        _startTransition = true;
         _nextSceneName = TITLE_SCENE;
     }
     
@@ -56,6 +63,14 @@ public class GameSettings : MonoBehaviour
         if (SceneManager.GetActiveScene().name == _nextSceneName)
         {
             transitionScreen.Active = true;
+            _startTransition = false;
+        }
+
+        if (transitionScreen.Done && !_transitioning && _startTransition)
+        {
+            _transitioning = true;
+            SceneManager.LoadScene(_nextSceneName);
+            OnTransitioning?.Invoke();
         }
     }
 

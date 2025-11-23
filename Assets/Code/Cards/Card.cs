@@ -53,12 +53,13 @@ public class Card : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.PlayerManager.CurrentPlayer != BelongsTo && _spriteRenderer.sprite == _back && !Played)
+        if (GameManager.Instance.PlayerManager.CurrentPlayer != BelongsTo && _spriteRenderer.sprite == _back &&
+            !Played && GameManager.Instance.currentState != GameStateManager.GameState.ChangePlayer)
         {
             _spriteRenderer.transform.localScale = Vector3.Lerp(_spriteRenderer.transform.localScale,
                 Vector3.one * CARD_SCALE_NOT_CURRENT_PLAYER, Time.deltaTime * cardResponsiveness);
         }
-        
+
         if(!BelongsTo)
             _spriteRenderer.material.SetFloat(ShowLines, 0);
         

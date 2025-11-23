@@ -39,9 +39,10 @@ public class JokerState : GameState
                     var cards = GameContext.Manager.CardManager.PlayedStack;
                     
                     Player current = GameContext.Players[GameContext.CurrentPlayerIndex];
+                    Player last = GameContext.Players[GameContext.LastPlayerIndex];
                     
                     var players =
-                        GameContext.Manager.PlayerManager.GetPlayersExcluding(current);
+                        GameContext.Manager.PlayerManager.GetPlayersExcluding(last);
                     
                     GameContext.Manager.CardManager.DistributeCards(cards, players, current);
                     GameContext.Manager.CardManager.PlayedStack.Clear();

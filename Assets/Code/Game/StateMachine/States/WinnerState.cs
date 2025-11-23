@@ -71,7 +71,7 @@ public class WinnerState : GameState
         
         if(!_nameShake.Done) return;
         
-        GameContext.ReturnToMenuButton.transform.parent.gameObject.SetActive(true);
+        GameContext.ReturnToMenuButton.gameObject.SetActive(true);
     }
 
     public override void ExitState()

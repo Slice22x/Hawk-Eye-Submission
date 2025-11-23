@@ -65,6 +65,10 @@ public class Player : MonoBehaviour
     void Awake()
     {
         GameManager.OnChangePlayerCamera += SetCamera;
+        GameSettings.OnTransitioning += () =>
+        {
+            GameManager.OnChangePlayerCamera -= SetCamera;
+        };
     }
 
     private void Start()
@@ -178,6 +182,9 @@ public class Player : MonoBehaviour
         }
         
         UpdatePlayedRank();
+        
+        if(!GameManager.Instance.CanReverse)
+            UnSelectableCards(card => card.Rank == CardInfo.CardRank.Jester);
         
         //If the hand count goes below 4 then only 1 rank of card can be selected after or any rank currently selected
         if (hand.Count <= cardMaxLimitWithoutJoker || hand.Count - _selectedCards.Count <= cardMaxLimitWithoutJoker)

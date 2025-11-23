@@ -8,7 +8,7 @@ public class GameContext
     public GameContext(GameManager manager, List<Player> players, Image switchPlayerPrompt,
         TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup,
         float revealTimer, CanvasGroup winnerCanvasGroup, float alphaResponsiveness,
-        Image winnerCardImage, TMP_Text winnerCardTextName, Button returnToMenuButton,
+        Image winnerCardImage, TMP_Text winnerCardTextName, Image returnToMenuButton,
         int startingCardAmount, TMP_Text currentPlayerText, TMP_Text calledOutByText, Image calledOutByPlayerImage)
     {
         Manager = manager;
@@ -38,7 +38,7 @@ public class GameContext
     public readonly CanvasGroup WinnerCanvasGroup;
     public readonly Image WinnerCardImage;
     public readonly TMP_Text WinnerCardTextName;
-    public readonly Button ReturnToMenuButton;
+    public readonly Image ReturnToMenuButton;
     public readonly TMP_Text CurrentPlayerText;
     public readonly TMP_Text CalledOutByText;
     public readonly Image CalledOutByPlayerImage;

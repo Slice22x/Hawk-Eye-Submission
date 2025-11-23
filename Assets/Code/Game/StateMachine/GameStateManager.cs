@@ -18,8 +18,6 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     }
 
     public GameContext GameContext;
-
-    [Space, SerializeField] private int startingCardAmount;
     
     [SerializeField] private Image switchPlayerPrompt;
     [SerializeField] private TMP_Text nextPlayerName;
@@ -27,7 +25,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     [SerializeField] private CanvasGroup winnerCanvasGroup;
     [SerializeField] private Image winnerCardImage;
     [SerializeField] private TMP_Text winnerCardTextName;
-    [SerializeField] private Button returnToMenuButton;
+    [SerializeField] private Image returnToMenuButton;
     [SerializeField] private float alphaResponsiveness;
     
     [Space, SerializeField] private TMP_Text currentPlayerText;
@@ -40,6 +38,10 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     {
         States = new Dictionary<GameState, BaseState<GameState>>();
         Player.OnPlayerAction += ReceiveRequestedData;
+        GameSettings.OnTransitioning += () =>
+        {
+            Player.OnPlayerAction -= ReceiveRequestedData;
+        };
     }
     
     private void InitialiseStates()
@@ -81,7 +83,7 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     {
         GameContext = new GameContext(GameManager.Instance, GameManager.Instance.PlayerManager.Players, switchPlayerPrompt,
             nextPlayerName, null, canvasGroup, revealTimer, winnerCanvasGroup, alphaResponsiveness,
-            winnerCardImage, winnerCardTextName, returnToMenuButton, startingCardAmount, currentPlayerText,
+            winnerCardImage, winnerCardTextName, returnToMenuButton, GameSettings.Instance.StartingCards, currentPlayerText,
             calledOutByText, calledOutByPlayerImage);
         
         InitialiseStates();

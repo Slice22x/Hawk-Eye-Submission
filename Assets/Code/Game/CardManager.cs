@@ -67,6 +67,10 @@ public class CardManager : MonoBehaviour
         _playerManager = GetComponent<PlayerManager>();
         _mat = GameManager.Instance.Mat;
         OnUpdateJokers += UpdatePlayedJokers;
+        GameSettings.OnTransitioning += () =>
+        {
+            OnUpdateJokers -= UpdatePlayedJokers;
+        };
     }
 
     private void UpdatePlayedJokers()
@@ -102,7 +106,7 @@ public class CardManager : MonoBehaviour
     
     public void PlaceCards(List<Card> cards, bool firstCard = false)
     {
-        foreach (var card in cards.Where(card => card))
+        foreach (var card in cards)
         {
             if(!card) return;
             
@@ -128,6 +132,13 @@ public class CardManager : MonoBehaviour
         {
             CardInfo.CardRank rank = cards[0].Rank;
 
+            if (cards[0].Suit == CardInfo.CardSuit.Jokers)
+            {
+                if(!GameManager.Instance.JustCalledOut)
+                    GameManager.Instance.CanCallOut = !GameManager.Instance.JustCalledOut;
+                GameManager.Instance.JustCalledOut = false;
+            }
+            
             for (int i = 0; i < CardQueue.Length; i++)
             {
                 if (CardQueue[i] == rank)
@@ -143,6 +154,7 @@ public class CardManager : MonoBehaviour
         if(!GameManager.Instance.JustCalledOut)
             GameManager.Instance.CanCallOut = !GameManager.Instance.JustCalledOut;
         GameManager.Instance.JustCalledOut = false;
+        GameManager.Instance.CanReverse = false;
         _cardQueueIndex = (_cardQueueIndex + 1) % CardQueue.Length;
         AmountOfCardsPlayedLast = cards.Count;
     }
