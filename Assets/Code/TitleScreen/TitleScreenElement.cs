@@ -56,6 +56,10 @@ public class TitleScreenElement : MonoBehaviour
     void Start()
     {
         TitleScreen.OnMenuChange += UpdateElement;
+        GameSettings.OnTransitioning += () =>
+        {
+            TitleScreen.OnMenuChange -= UpdateElement;
+        };
         _rectTransform = GetComponent<RectTransform>();
         _playerIndex = -1;
 
