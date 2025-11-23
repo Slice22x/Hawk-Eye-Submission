@@ -564,7 +564,7 @@ MonoBehaviour:
   currentPlayerText: {fileID: 1197204935}
   calledOutByText: {fileID: 178282167}
   calledOutByPlayerImage: {fileID: 694584229}
-  revealTimer: 0.75
+  revealTimer: 1
 --- !u!114 &84680457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4222,7 +4222,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 1b6c6b9f2a81b3a4e8f33bf2ea9a497e, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.24705882}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.5882353}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
@@ -5550,7 +5550,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.13, z: 4.59}
-  m_LocalScale: {x: 15, y: 15, z: 15}
+  m_LocalScale: {x: 16, y: 16, z: 16}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1154865554}

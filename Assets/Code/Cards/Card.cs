@@ -60,7 +60,7 @@ public class Card : MonoBehaviour
                 Vector3.one * CARD_SCALE_NOT_CURRENT_PLAYER, Time.deltaTime * cardResponsiveness);
         }
 
-        if(!BelongsTo)
+        if(!BelongsTo || BelongsTo != GameManager.Instance.PlayerManager.CurrentPlayer)
             _spriteRenderer.material.SetFloat(ShowLines, 0);
         
         Reveal();
@@ -114,7 +114,8 @@ public class Card : MonoBehaviour
             _pos = GameManager.Instance.CardManager.GetDisplayPosition(RevealIndex);
             _revealTransformCalculated = true;
         }
-        
+
+        _spriteRenderer.sortingOrder = 1000;
 
         rendererTransform.position = Vector3.Lerp(
             rendererTransform.position,

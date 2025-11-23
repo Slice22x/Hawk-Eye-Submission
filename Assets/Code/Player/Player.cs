@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
     private const float Y_POSITION = -0.009f;
     private const float Z_POSITION = 0.0211f;
     private const float CARD_SCALE = 0.001f;
-    private const int SORTING_ORDER = 52;
+    private const int SORTING_ORDER = 56;
     private const float BASE_CARD_SPACING = 0.5f;
     private const int HIGHEST_CAMERA_PRIORITY = 100;
     private const float CARD_DISPLAY_WIDTH_NOT_CURRENT_PLAYER = 3f;
