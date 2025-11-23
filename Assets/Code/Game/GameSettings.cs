@@ -30,23 +30,23 @@ public class GameSettings : MonoBehaviour
         return PLAYABLE_CARDS - (StartingCards * PlayerNames.Count) < minRemainingCards;
     }
     
-    public int AddPlayer(string name)
+    public int AddPlayer(string playerName)
     {
+        PlayerNames.Add(playerName);
+        
         for(int i = 0; i < PlayerNames.Count; i++)
         {
-            if(PlayerNames[i] == name)
+            if(PlayerNames[i] == playerName)
             {
                 return i;
             }
 
             if (string.IsNullOrEmpty(PlayerNames[i]))
             {
-                PlayerNames[i] = name;
+                PlayerNames[i] = playerName;
                 return i;
             }
         }
-        
-        PlayerNames.Add(name);
         return PlayerNames.Count;
     }
 }

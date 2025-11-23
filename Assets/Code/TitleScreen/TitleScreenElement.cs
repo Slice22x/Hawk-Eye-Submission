@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class TitleScreenElement : MonoBehaviour
     [SerializeField] private ElementSetting[] settings;
     [SerializeField] private bool ignorePositioning;
     [SerializeField] private GameObject warnObject;
+    [SerializeField] private TMP_InputField startingCardsField;
 
     private RectTransform _rectTransform;
     
@@ -55,6 +57,20 @@ public class TitleScreenElement : MonoBehaviour
     {
         TitleScreen.OnMenuChange += UpdateElement;
         _rectTransform = GetComponent<RectTransform>();
+        _playerIndex = -1;
+
+        if (startingCardsField)
+        {
+            startingCardsField.text = GameSettings.Instance.StartingCards.ToString();
+        }
+        
+        TitleScreen.OnStartingGame += () =>
+        {
+            if (warnObject)
+            {
+                warnObject.SetActive(GameSettings.Instance.WarnStartingCards());
+            }
+        };
     }
     
     void Update()
@@ -90,6 +106,19 @@ public class TitleScreenElement : MonoBehaviour
 
     public void UpdatePlayerCount(string playerName)
     {
+        if(string.IsNullOrEmpty(playerName))
+        {
+            GameSettings.Instance.PlayerNames.RemoveAt(_playerIndex);
+            _playerIndex = -1;
+            return;
+        }
+        
+        if(_playerIndex > -1)
+        {
+            GameSettings.Instance.PlayerNames[_playerIndex] = playerName;
+            return;
+        }
+        
         _playerIndex = GameSettings.Instance.AddPlayer(playerName);
     }
 

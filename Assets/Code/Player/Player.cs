@@ -54,8 +54,6 @@ public class Player : MonoBehaviour
     private const float CARD_SCALE = 0.001f;
     private const int SORTING_ORDER = 52;
     private const float BASE_CARD_SPACING = 0.5f;
-    private const int CARD_SELECT_LIMIT = 4;
-    private const int CARD_SELECT_LIMIT_WITH_JOKER = 2;
     private const int HIGHEST_CAMERA_PRIORITY = 100;
     
     public delegate void PlayerAction(PlayerRequestData data);
@@ -149,8 +147,8 @@ public class Player : MonoBehaviour
         }
 
         _cardMaxLimit = SelectedContainsJoker(card) && !GameManager.Instance.JustCalledOut
-            ? CARD_SELECT_LIMIT_WITH_JOKER
-            : CARD_SELECT_LIMIT;
+            ? cardMaxLimitWithJoker
+            : cardMaxLimitWithoutJoker;
         
         if (_selectedCards.Count >= _cardMaxLimit) return;
         
@@ -178,11 +176,11 @@ public class Player : MonoBehaviour
         UpdatePlayedRank();
         
         //If the hand count goes below 4 then only 1 rank of card can be selected after or any rank currently selected
-        if (hand.Count <= CARD_SELECT_LIMIT || hand.Count - _selectedCards.Count <= CARD_SELECT_LIMIT)
+        if (hand.Count <= cardMaxLimitWithoutJoker || hand.Count - _selectedCards.Count <= cardMaxLimitWithoutJoker)
             UnSelectableCards(card => !_playedRanks.Contains(card.Rank));
 
         //If 2 cards have been selected already then no more Jokers can be played after
-        if (_selectedCards.Count >= CARD_SELECT_LIMIT_WITH_JOKER && !SelectedContainsJoker())
+        if (_selectedCards.Count >= cardMaxLimitWithJoker && !SelectedContainsJoker())
             UnSelectableCards(card => card.Suit == CardInfo.CardSuit.Jokers);
         
         //Prevents going over card limit

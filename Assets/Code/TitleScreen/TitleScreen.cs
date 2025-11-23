@@ -30,6 +30,9 @@ public class TitleScreen : MonoBehaviour
         public Color complementaryColour;
         public Color fresnelColour;
     }
+
+    public delegate void StartingGame();
+    public static StartingGame OnStartingGame;
     
     [SerializeField] private MenuColours[] menuColours;
     [SerializeField] private Image titleScreenImage;
@@ -99,7 +102,7 @@ public class TitleScreen : MonoBehaviour
                 CurrentState = TitleScreenState.TutorialMenu;
                 break;
             case TitleScreenState.TutorialMenu:
-                CurrentState = TitleScreenState.MainMenu;
+                OnStartingGame?.Invoke();
                 break;
         }
         
