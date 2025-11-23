@@ -36,7 +36,7 @@ public class GameSettings : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         OnGameStart += () =>
         {
-            if(WarnStartingCards()) return;
+            if(WarnStartingCards() || PlayerNames.Count < 2 || StartingCards == 0) return;
 
             StartTransitionGame();
         };

@@ -36,6 +36,8 @@ public class TitleScreen : MonoBehaviour
     
     [SerializeField] private MenuColours[] menuColours;
     [SerializeField] private Image titleScreenImage;
+    [SerializeField] private Image warningImagePlayers;
+    [SerializeField] private Image warningImageCards;
     
     [Space, SerializeField] private float lerpSpeed = 1f;
 
@@ -99,6 +101,18 @@ public class TitleScreen : MonoBehaviour
                 CurrentState = TitleScreenState.SettingsMenu;
                 break;
             case TitleScreenState.SettingsMenu:
+                warningImagePlayers.gameObject.SetActive(true);
+                warningImageCards.gameObject.SetActive(true);
+                
+                if(GameSettings.Instance.PlayerNames.Count >= 2)
+                    warningImagePlayers.gameObject.SetActive(false);
+
+                if (GameSettings.Instance.StartingCards > 0) 
+                    warningImageCards.gameObject.SetActive(false);
+
+                if (GameSettings.Instance.WarnStartingCards() || GameSettings.Instance.PlayerNames.Count < 2 ||
+                    GameSettings.Instance.StartingCards == 0) return;
+                
                 CurrentState = TitleScreenState.TutorialMenu;
                 break;
             case TitleScreenState.TutorialMenu:
