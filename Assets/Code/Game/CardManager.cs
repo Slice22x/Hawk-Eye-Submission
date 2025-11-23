@@ -104,12 +104,14 @@ public class CardManager : MonoBehaviour
     {
         foreach (var card in cards.Where(card => card))
         {
+            if(!card) return;
+            
             card.gameObject.SetActive(true);
             
             card.transform.parent = _mat;
             card.transform.localPosition = new Vector3(0f, 0f, PLACED_CARD_POSITION_Z);
             
-            card.transform.localEulerAngles = new Vector3(0, 0, card.BelongsTo.transform.localEulerAngles.y + Random.Range(-15f,15f));
+            if(card.BelongsTo) card.transform.localEulerAngles = new Vector3(0, 0, card.BelongsTo.transform.localEulerAngles.y + Random.Range(-15f,15f));
             
             card.transform.localScale = Vector3.one * PLACED_CARD_SCALE;
 

@@ -20,6 +20,7 @@ public class WinnerState : GameState
         if (GameContext.Manager.CardManager.CardStack.Count > 0)
         {
             var cards = GameContext.Manager.CardManager.PopCards(3);
+            Debug.Log(cards);
             GameContext.Manager.CardManager.GiveCards(GameContext.Players[GameContext.CurrentPlayerIndex], cards);
             _winnerDecided = false;
             _processed = true;

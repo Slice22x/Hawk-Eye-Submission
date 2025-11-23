@@ -8,12 +8,6 @@ public class Card : MonoBehaviour
     private static readonly int BlendAmount = Shader.PropertyToID("_BlendAmount");
     private static readonly int ShowLines = Shader.PropertyToID("_ShowLines");
 
-    public Card(CardInfo.CardSuit suit, CardInfo.CardRank rank)
-    {
-        this.Suit = suit;
-        this.Rank = rank;
-    }
-
     public CardInfo.CardSuit Suit;
     public CardInfo.CardRank Rank;
     public bool Selectable;
@@ -45,6 +39,7 @@ public class Card : MonoBehaviour
     private Camera mainCamera => Camera.main;
 
     private const float REVEAL_Y_POSITION = 6.3f;
+    private const float CARD_SCALE_NOT_CURRENT_PLAYER = 6f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -58,6 +53,12 @@ public class Card : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance.PlayerManager.CurrentPlayer != BelongsTo && _spriteRenderer.sprite == _back && !Played)
+        {
+            _spriteRenderer.transform.localScale = Vector3.Lerp(_spriteRenderer.transform.localScale,
+                Vector3.one * CARD_SCALE_NOT_CURRENT_PLAYER, Time.deltaTime * cardResponsiveness);
+        }
+        
         if(!BelongsTo)
             _spriteRenderer.material.SetFloat(ShowLines, 0);
         

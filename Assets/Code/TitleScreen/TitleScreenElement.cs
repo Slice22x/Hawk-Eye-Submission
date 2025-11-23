@@ -69,6 +69,7 @@ public class TitleScreenElement : MonoBehaviour
             if (warnObject)
             {
                 warnObject.SetActive(GameSettings.Instance.WarnStartingCards());
+                GameSettings.OnGameStart?.Invoke();
             }
         };
     }
@@ -82,7 +83,7 @@ public class TitleScreenElement : MonoBehaviour
         transform.localScale = Vector3.Lerp(transform.localScale, _useScale ? _targetScale : transform.localScale,
             Time.deltaTime * _responsiveness);
         
-        transform.parent = _targetParent ? _targetParent : transform.parent;
+        transform.SetParent(_targetParent ? _targetParent : transform.parent);
         
         _rectTransform.sizeDelta = Vector3.Lerp(_rectTransform.sizeDelta,
             new Vector3(_useWidth ? _targetWidth : _rectTransform.sizeDelta.x, _rectTransform.sizeDelta.y),

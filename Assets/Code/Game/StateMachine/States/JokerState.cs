@@ -58,6 +58,22 @@ public class JokerState : GameState
                     break;
                 case CardInfo.CardRank.Jester:
                     GameContext.Direction *= -1;
+                    GameContext.Manager.GameDirection.Invert();
+                    GameContext.Manager.CanReverse = false;
+                    
+                    GameContext.LastPlayerIndex = (GameContext.CurrentPlayerIndex - GameContext.Direction) % GameContext.Players.Count;
+                    GameContext.NextPlayerIndex = (GameContext.NextPlayerIndex + GameContext.Direction) % GameContext.Players.Count;
+                    
+                    if (GameContext.LastPlayerIndex < 0)
+                    {
+                        GameContext.LastPlayerIndex = 0;
+                    }
+
+                    if (GameContext.NextPlayerIndex < 0)
+                    {
+                        GameContext.NextPlayerIndex = GameContext.Players.Count - 1;
+                    }
+                    
                     _callout = true;
                     break;
                 case CardInfo.CardRank.Bail:
@@ -79,6 +95,7 @@ public class JokerState : GameState
     public override void ExitState()
     {
         GameContext.PreviousState = GameStateManager.GameState.Joker;
+        _callout = false;
     }
     
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)

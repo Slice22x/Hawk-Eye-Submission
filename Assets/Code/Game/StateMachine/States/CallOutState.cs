@@ -66,6 +66,8 @@ public class CallOutState : GameState
         _lastPlayedCards = null;
         _calledOutPositive = false;
         _animating = true;
+
+        GameContext.Players[GameContext.LastPlayerIndex].CalledOut = true;
         
         GameContext.PreviousState = GameStateManager.GameState.CallOut;
     }

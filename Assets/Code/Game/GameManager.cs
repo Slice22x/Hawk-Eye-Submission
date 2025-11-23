@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     public GameStateManager.GameState currentState;
     public bool CanCallOut;
     public bool JustCalledOut;
+    public bool CanReverse = true;
     private GameStateManager _stateManager;
+    public Rotate GameDirection;
 
     [Header("Players")]
     public PlayerManager PlayerManager { get; private set; }
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text NextRankText;
     public TMP_Text AmountText;
     public Button PlaceButton;
+    public TMP_Text CardsLeftText;
     [SerializeField] private Button callOutButton;
     [SerializeField] private Button pickUpButton;
     
@@ -62,10 +65,17 @@ public class GameManager : MonoBehaviour
         NextRankText.text = JustCalledOut ? "RANK: Any" : $"RANK: {GetLastPlayedRankText(CardManager.LastRank() + 1)}";
         AmountText.text = $"{CardManager.AmountOfCardsPlayedLast}";
         
+        CardsLeftText.text = CardManager.CardStack.Count.ToString();
+        
         callOutButton.interactable = CanCallOut;
         pickUpButton.interactable = CardManager.CardStack.Count > 0;
     }
 
+    public void ReturnToTitle()
+    {
+        GameSettings.Instance.StartTransitionTitle();
+    }
+    
     private string GetLastPlayedRankText(CardInfo.CardRank rank)
     {
         if (rank > CardInfo.CardRank.King) rank = CardInfo.CardRank.Ace;

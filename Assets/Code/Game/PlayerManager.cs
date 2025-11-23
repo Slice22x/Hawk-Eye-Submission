@@ -39,6 +39,9 @@ public class PlayerManager : MonoBehaviour
             newPlayer.transform.eulerAngles = new Vector3(0, newPlayer.transform.eulerAngles.y, 0);
             newPlayer.playerIndex = i;
             
+            newPlayer.playerName = GameSettings.Instance.PlayerNames[i];
+            newPlayer.gameObject.name = GameSettings.Instance.PlayerNames[i];
+            
             Players.Add(newPlayer);
         }
         

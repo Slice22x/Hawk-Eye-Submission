@@ -32,7 +32,7 @@ public class PlaceCardState : GameState
 
     public override void ExitState()
     {
-        
+        GameContext.PreviousState = GameStateManager.GameState.PlaceCard;
     }
 
     public override GameStateManager.GameState GetNextState(GameStateManager.GameState lastState)

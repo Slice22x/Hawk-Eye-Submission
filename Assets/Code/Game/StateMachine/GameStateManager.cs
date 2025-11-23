@@ -30,6 +30,10 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     [SerializeField] private Button returnToMenuButton;
     [SerializeField] private float alphaResponsiveness;
     
+    [Space, SerializeField] private TMP_Text currentPlayerText;
+    [SerializeField] private TMP_Text calledOutByText;
+    [SerializeField] private Image calledOutByPlayerImage;
+    
     [SerializeField] private float revealTimer;
     
     private void Awake()
@@ -77,7 +81,8 @@ public class GameStateManager : StateManager<GameStateManager.GameState>
     {
         GameContext = new GameContext(GameManager.Instance, GameManager.Instance.PlayerManager.Players, switchPlayerPrompt,
             nextPlayerName, null, canvasGroup, revealTimer, winnerCanvasGroup, alphaResponsiveness,
-            winnerCardImage, winnerCardTextName, returnToMenuButton, startingCardAmount);
+            winnerCardImage, winnerCardTextName, returnToMenuButton, startingCardAmount, currentPlayerText,
+            calledOutByText, calledOutByPlayerImage);
         
         InitialiseStates();
         

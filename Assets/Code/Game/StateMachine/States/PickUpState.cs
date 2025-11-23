@@ -20,6 +20,7 @@ public class PickUpState : GameState
         poppedCard.gameObject.SetActive(true);
         GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex].AddCardToHand(poppedCard);
         poppedCard.AssignCardToPlayer(GameContext.Players[GameContext.PlayerRequestDataBuffer.playerIndex]);
+        GameContext.Manager.CanCallOut = false;
         _processed = true;
     }
 

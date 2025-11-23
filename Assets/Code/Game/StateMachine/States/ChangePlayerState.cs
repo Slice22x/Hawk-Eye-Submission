@@ -14,6 +14,8 @@ public class ChangePlayerState : GameState
         if(GameContext.NextPlayerIndex < 0) GameContext.NextPlayerIndex = GameContext.Players.Count - 1;
         if(GameContext.NextPlayerIndex >= GameContext.Players.Count) GameContext.NextPlayerIndex = 0;
         
+        GameContext.Players[GameContext.CurrentPlayerIndex].CalledOut = false;
+        
         GameManager.OnChangePlayerCamera?.Invoke(null);
         GameContext.SwitchPlayerPrompt.gameObject.SetActive(true);
         GameContext.NextPlayerName.text = $"Switch To Player: {GameContext.Players[GameContext.NextPlayerIndex].playerName}";
@@ -33,6 +35,21 @@ public class ChangePlayerState : GameState
         
         GameContext.LastPlayerIndex = (GameContext.CurrentPlayerIndex - GameContext.Direction) % GameContext.Players.Count;
         GameContext.NextPlayerIndex = (GameContext.NextPlayerIndex + GameContext.Direction) % GameContext.Players.Count;
+        
+        GameContext.CurrentPlayerText.text = GameContext.Players[GameContext.CurrentPlayerIndex].playerName;
+
+        if (GameContext.LastPlayerIndex < 0)
+        {
+            GameContext.LastPlayerIndex = 0;
+        }
+
+        if (GameContext.NextPlayerIndex < 0)
+        {
+            GameContext.NextPlayerIndex = GameContext.Players.Count - 1;
+        }
+        
+        GameContext.CalledOutByPlayerImage.gameObject.SetActive(GameContext.Players[GameContext.CurrentPlayerIndex].CalledOut);
+        GameContext.CalledOutByText.text = $"By: {GameContext.Players[GameContext.NextPlayerIndex].playerName} On their turn";
         
         GameContext.SwitchPlayerPrompt.gameObject.SetActive(false);
         GameContext.CanvasGroup.blocksRaycasts = true;

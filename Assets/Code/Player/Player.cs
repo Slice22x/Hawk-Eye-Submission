@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
     public int playerIndex;
     public List<Card> hand;
     public string playerName;
+    public bool CalledOut;
     
     [SerializeField] private float cardDisplayWidth = 0.5f;
 
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
     private const int SORTING_ORDER = 52;
     private const float BASE_CARD_SPACING = 0.5f;
     private const int HIGHEST_CAMERA_PRIORITY = 100;
+    private const float CARD_DISPLAY_WIDTH_NOT_CURRENT_PLAYER = 3f;
     
     public delegate void PlayerAction(PlayerRequestData data);
     public static PlayerAction OnPlayerAction;
@@ -76,8 +78,10 @@ public class Player : MonoBehaviour
     {   
         UpdateHandPositions();
         playerNameText.text = playerName;
-        
-        cardDisplayWidth = Mathf.Lerp(BASE_CARD_SPACING, 1f, hand.Count / 32f);
+
+        cardDisplayWidth = GameManager.Instance.PlayerManager.CurrentPlayerIndex == playerIndex
+            ? Mathf.Lerp(BASE_CARD_SPACING, 1f, hand.Count / 32f)
+            : CARD_DISPLAY_WIDTH_NOT_CURRENT_PLAYER;
 
         if (playerCamera.Priority == HIGHEST_CAMERA_PRIORITY)
         {

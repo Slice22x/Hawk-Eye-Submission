@@ -9,7 +9,7 @@ public class GameContext
         TMP_Text switchPlayerPromptText, PlayerRequestData playerRequestData, CanvasGroup canvasGroup,
         float revealTimer, CanvasGroup winnerCanvasGroup, float alphaResponsiveness,
         Image winnerCardImage, TMP_Text winnerCardTextName, Button returnToMenuButton,
-        int startingCardAmount)
+        int startingCardAmount, TMP_Text currentPlayerText, TMP_Text calledOutByText, Image calledOutByPlayerImage)
     {
         Manager = manager;
         Players = players;
@@ -24,6 +24,9 @@ public class GameContext
         WinnerCardTextName = winnerCardTextName;
         ReturnToMenuButton = returnToMenuButton;
         StartingCardAmount = startingCardAmount;
+        CurrentPlayerText = currentPlayerText;
+        CalledOutByText = calledOutByText;
+        CalledOutByPlayerImage = calledOutByPlayerImage;
     }
 
     public readonly GameManager Manager;
@@ -36,10 +39,13 @@ public class GameContext
     public readonly Image WinnerCardImage;
     public readonly TMP_Text WinnerCardTextName;
     public readonly Button ReturnToMenuButton;
+    public readonly TMP_Text CurrentPlayerText;
+    public readonly TMP_Text CalledOutByText;
+    public readonly Image CalledOutByPlayerImage;
     
     public int NextPlayerIndex;
-    public int CurrentPlayerIndex = -1;
-    public int LastPlayerIndex = -1;
+    public int CurrentPlayerIndex;
+    public int LastPlayerIndex;
     public int StartingCardAmount;
     
     /// <summary>
