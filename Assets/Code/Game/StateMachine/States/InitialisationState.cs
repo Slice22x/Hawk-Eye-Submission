@@ -14,7 +14,7 @@ public class InitialisationState : GameState
         GameContext.Manager.PlayerManager.SpawnPlayers();
         GameContext.Manager.CardManager.SpawnCards();
         GameContext.Manager.CardManager.Shuffle();
-        GameContext.Manager.CardManager.DistributeCards(GameContext.Players, GameContext.StartingCardAmount);
+        GameContext.Manager.CardManager.DistributeCards(GameContext.Players, GameSettings.Instance.StartingCards);
     }
 
     public override void UpdateState()

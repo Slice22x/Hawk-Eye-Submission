@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private Player playerPrefab;
     
-    public int AmountOfPlayers;
+    private int _amountOfPlayers => GameSettings.Instance.PlayerNames.Count;
     public List<Player> Players;
     private int _currentPlayerIndex;
     public Player CurrentPlayer => Players[_currentPlayerIndex];
@@ -25,14 +25,14 @@ public class PlayerManager : MonoBehaviour
 
     public void SpawnPlayers()
     {
-        for (int i = 0; i < AmountOfPlayers; i++)
+        for (int i = 0; i < _amountOfPlayers; i++)
         {
             Player newPlayer = Instantiate(playerPrefab, null);
             
             newPlayer.transform.position = _manager.Mat.position + new Vector3(
-                Mathf.Cos(i * (2 * Mathf.PI / AmountOfPlayers)) * _manager.RadiusFromMat, 
+                Mathf.Cos(i * (2 * Mathf.PI / _amountOfPlayers)) * _manager.RadiusFromMat, 
                 0, 
-                Mathf.Sin(i * (2 * Mathf.PI / AmountOfPlayers)) * _manager.RadiusFromMat);
+                Mathf.Sin(i * (2 * Mathf.PI / _amountOfPlayers)) * _manager.RadiusFromMat);
             
             newPlayer.transform.LookAt(_mat);
             
@@ -42,7 +42,7 @@ public class PlayerManager : MonoBehaviour
             Players.Add(newPlayer);
         }
         
-        _currentPlayerIndex = Random.Range(0, AmountOfPlayers);
+        _currentPlayerIndex = Random.Range(0, _amountOfPlayers);
         GameManager.OnChangePlayerCamera?.Invoke(Players[_currentPlayerIndex]);
     }
 

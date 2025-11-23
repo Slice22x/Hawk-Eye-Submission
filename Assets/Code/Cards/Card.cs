@@ -107,7 +107,7 @@ public class Card : MonoBehaviour
         {
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             
-            _angle = GameManager.Instance.PlayerManager.CurrentPlayerIndex * (360f / GameManager.Instance.PlayerManager.AmountOfPlayers);
+            _angle = GameManager.Instance.PlayerManager.CurrentPlayerIndex * (360f / GameSettings.Instance.PlayerNames.Count);
             
             _pos = GameManager.Instance.CardManager.GetDisplayPosition(RevealIndex);
             _revealTransformCalculated = true;

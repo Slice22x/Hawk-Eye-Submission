@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -10,12 +11,15 @@ public class TitleScreen : MonoBehaviour
 
     public delegate void MenuChange(TitleScreenState state);
     public static MenuChange OnMenuChange;
+
+    public static TitleScreen Instance;
     
     public enum TitleScreenState
     {
         MainMenu,
         SettingsMenu,
         InfoMenu,
+        TutorialMenu
     }
 
     [System.Serializable]
@@ -41,6 +45,11 @@ public class TitleScreen : MonoBehaviour
     private Color _currentFresnelColour;
     
     private MenuColours _currentMenuColour;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -81,7 +90,19 @@ public class TitleScreen : MonoBehaviour
     
     public void PlayGame()
     {
-        CurrentState = TitleScreenState.SettingsMenu;
+        switch (CurrentState)
+        {
+            case TitleScreenState.MainMenu:
+                CurrentState = TitleScreenState.SettingsMenu;
+                break;
+            case TitleScreenState.SettingsMenu:
+                CurrentState = TitleScreenState.TutorialMenu;
+                break;
+            case TitleScreenState.TutorialMenu:
+                CurrentState = TitleScreenState.MainMenu;
+                break;
+        }
+        
         _currentMenuColour = GetCurrentMenuColour();
         OnMenuChange?.Invoke(CurrentState);
     }
@@ -103,7 +124,18 @@ public class TitleScreen : MonoBehaviour
     
     public void MenuBack()
     {
-        CurrentState = TitleScreenState.MainMenu;
+        switch (CurrentState)
+        {
+            case TitleScreenState.SettingsMenu:
+            case TitleScreenState.InfoMenu:
+                CurrentState = TitleScreenState.MainMenu;
+                break;
+            case TitleScreenState.TutorialMenu:
+                CurrentState = TitleScreenState.SettingsMenu;
+                break;
+
+        }
+        
         _currentMenuColour = GetCurrentMenuColour();
         OnMenuChange?.Invoke(CurrentState);
     }

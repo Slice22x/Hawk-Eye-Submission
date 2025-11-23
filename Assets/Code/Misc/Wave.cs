@@ -21,6 +21,18 @@ public class Wave : MonoBehaviour
         }
     }
 
+    public void Activate()
+    {
+        if(TitleScreen.Instance.CurrentState == TitleScreen.TitleScreenState.TutorialMenu) return;
+        
+        Active = true;
+    }
+    
+    public void Deactivate()
+    {
+        Active = false;
+    }
+    
     // Update is called once per frame
     void Update()
     {
